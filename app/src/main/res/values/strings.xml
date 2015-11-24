@@ -1,4 +1,64 @@
 <resources>
-    <string name="app_name">HumanResourceManagement</string>
+    <string name="app_name">Register</string>
     <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="nav_item_home">Home</string>
+    <string name="nav_item_registration">Registration</string>
+    <string name="nav_item_view">View</string>
+    <string name="nav_item_update">Edit</string>
+    <string name="title_update">Edit</string>
+    <string name="title_view">View</string>
+    <string name="title_registration">Registration</string>
+    <string name="title_home">Home</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hint_name">Full Name</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_dept">Department</string>
+    <string name="hint_birth_place">Birthplace</string>
+    <string name="hint_date">Choose Date </string>
+    <string name="btn_add_usr">Submit</string>
+    <string name="err_msg_name">Enter your full name</string>
+    <string name="err_msg_email">Enter valid email address</string>
+    <string name="err_msg_password">Enter the password</string>
+    <string name="hint_phone">Enter Your Contact Number</string>
+
+    <string-array name="nav_drawer_labels">
+        <item>@string/nav_item_home</item>
+        <item>@string/nav_item_registration</item>
+        <item>@string/nav_item_view</item>
+        <item>@string/nav_item_update</item>
+    </string-array>
+
+    <string name="select">Choose Currently Active or Not</string>
+    <string-array name="activity_array">
+        <item>ACTIVE</item>
+        <item>INACTIVE</item>
+    </string-array>
+
+    <string name="select_dept">Choose department</string>
+    <string-array name="department_array">
+        <item>HRM &amp; ADMIN</item>
+        <item>FINANCE &amp; ACCOUNTS</item>
+        <item>SELLS</item>
+        <item>MARKETING</item>
+        <item>OPERATIONS</item>
+    </string-array>
+
+    <string name="select_status">Choose status</string>
+    <string-array name="status_array">
+        <item>TRAINEE</item>
+        <item>INTERNSHIP</item>
+        <item>OFFICIAL STAFF</item>
+    </string-array>
+
+    <string name="select_position">Choose a position</string>
+    <string-array name="position_array">
+        <item>CEO</item>
+        <item>MANAGER</item>
+        <item>DEPUTY MANAGER</item>
+        <item>SR. EXECUTIVE</item>
+        <item>EXECUTIVE</item>
+    </string-array>
 </resources>
