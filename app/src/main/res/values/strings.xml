@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">HumanResourceManagement</string>
     <string name="action_settings">Settings</string>
+    <string name="home_screen_title">DEPARTMENTS</string>
+    <string name="staff_list_title">Staffs</string>
+    <string name="title_activity_staff_list">StaffListActivity</string>
+    <string name="title_activity_add_staff">AddStaffActivity</string>
+    <string name="button_save">Save</string>
 </resources>
