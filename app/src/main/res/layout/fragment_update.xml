@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.framgia.hrm.activity.UpdateFragment">
+    <TextView
+        android:id="@+id/text_1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/fragment_update_text_1_layout_margin_top"
+        android:gravity="center_horizontal"
+        android:text="@string/fragment_update_text_1_text"
+        android:textSize="@dimen/fragment_update_text_1_text_size"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/text_2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_1"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/fragment_update_text_2_layout_margin_top"
+        android:gravity="center_horizontal"
+        android:text="@string/fragment_update_text_2_text"
+        android:textSize="@dimen/fragment_view_text_2_text_size" />
+</RelativeLayout>

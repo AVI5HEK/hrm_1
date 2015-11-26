@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+    <RelativeLayout
+        android:id="@+id/relative_2_nav_header_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fragment_navigation_drawer_relative_2_nav_header_container_layout_height"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorPrimary">
+        <ImageView
+            android:id="@+id/image_1"
+            android:layout_width="@dimen/fragment_navigation_drawer_relative_2_nav_header_container_image_1_layout_width"
+            android:layout_height="@dimen/fragment_navigation_drawer_relative_2_nav_header_container_image_1_layout_height"
+            android:layout_centerInParent="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/profile" />
+    </RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/drawerList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/relative_2_nav_header_container"
+        android:layout_marginTop="@dimen/fragment_navigation_drawer_relative_layout_margin_top"/>
+</RelativeLayout>
