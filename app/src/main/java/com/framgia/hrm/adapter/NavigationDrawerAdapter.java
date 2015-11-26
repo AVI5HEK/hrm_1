@@ -10,11 +10,9 @@ import com.framgia.hrm.R;
 import com.framgia.hrm.model.NavDrawerItem;
 import java.util.Collections;
 import java.util.List;
-
 /**
  * Created by sharma on 11/23/15.
  */
-
 public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDrawerAdapter.MyViewHolder> {
     List<NavDrawerItem> data = Collections.emptyList();
     private LayoutInflater inflater;
@@ -54,7 +52,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.title);
+            title = (TextView) itemView.findViewById(R.id.text_title);
         }
     }
 }

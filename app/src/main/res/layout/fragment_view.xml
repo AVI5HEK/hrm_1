@@ -6,22 +6,23 @@
     android:orientation="vertical"
     tools:context="com.framgia.hrm.activity.ViewFragment">
     <TextView
-        android:id="@+id/label"
+        android:id="@+id/text_1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="@dimen/fragment_view_text_1_margin_top"
         android:gravity="center_horizontal"
-        android:text="SEE THE LIST"
-        android:textSize="45dp"
+        android:text="@string/fragment_view_text_1_text"
+        android:textSize="@dimen/fragment_view_text_1_text_size"
         android:textStyle="bold" />
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/label"
+        android:layout_below="@id/text_1"
         android:layout_centerInParent="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/fragment_view_text_2_margin_top"
         android:gravity="center_horizontal"
-        android:text="Edit fragment_view.xml to change the appearance"
-        android:textSize="12dp" />
+        android:text="@string/fragment_view_text_2_text"
+        android:textSize="@dimen/fragment_view_text_2_text_size"
+        android:id="@+id/text_2"/>
 </RelativeLayout>

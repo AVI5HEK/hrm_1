@@ -13,19 +13,19 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import com.framgia.hrm.R;
+
 import java.util.Calendar;
 
 /**
  * Created by sharma on 11/23/15.
  */
 public class RegistrationFragment extends Fragment {
-
     EditText editText;
     ImageButton imageButton;
 
-    public RegistrationFragment() {
-    }
+    public RegistrationFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,22 +36,19 @@ public class RegistrationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_registration, container, false);
-
         imageButton = (ImageButton) rootView.findViewById(R.id.imageButton1);
-        editText = (EditText) rootView.findViewById(R.id.calendar_id);
+        editText = (EditText) rootView.findViewById(R.id.edit_calendar_id);
 
         //**************IMPLEMENTING SPINNER DROP DOWN FOR ACTIVITY
-        Spinner spinner = (Spinner) rootView.findViewById(R.id.Spinner);
+        Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner_text_activity);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.activity_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getContext(), position + "is selected", Toast.LENGTH_SHORT).show();
-
             }
 
             @Override
@@ -59,13 +56,12 @@ public class RegistrationFragment extends Fragment {
         });
 
         //**************IMPLEMENTING SPINNER DROP DOWN FOR DEPARTMENT
-
-        Spinner spinner_dept = (Spinner) rootView.findViewById(R.id.Spinner_dept);
+        Spinner spinner_dept = (Spinner) rootView.findViewById(R.id.spinner_dept);
         ArrayAdapter<CharSequence> adapter_dept = ArrayAdapter.createFromResource(getContext(), R.array.department_array, android.R.layout.simple_spinner_item);
         adapter_dept.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_dept.setAdapter(adapter_dept);
-
         spinner_dept.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getContext(), position + "is selected", Toast.LENGTH_SHORT).show();
@@ -74,35 +70,30 @@ public class RegistrationFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
-
         });
 
         //****************IMPLEMENTING SPINNER DROP DOWN FOR STATUS
-
-        Spinner spinner_status = (Spinner) rootView.findViewById(R.id.Spinner_status);
+        Spinner spinner_status = (Spinner) rootView.findViewById(R.id.spinner_status);
         ArrayAdapter<CharSequence> adapter_status = ArrayAdapter.createFromResource(getContext(), R.array.status_array, android.R.layout.simple_spinner_item);
         adapter_status.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_status.setAdapter(adapter_status);
-
         spinner_status.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getContext(), position + "is selected", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
-
         //****************IMPLEMENTING SPINNER DROP DOWN FOR POSITION
-
-        Spinner spinner_position = (Spinner) rootView.findViewById(R.id.Spinner_position);
+        Spinner spinner_position = (Spinner) rootView.findViewById(R.id.spinner_position);
         ArrayAdapter<CharSequence> adapter_position = ArrayAdapter.createFromResource(getContext(), R.array.position_array, android.R.layout.simple_spinner_item);
         adapter_position.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_position.setAdapter(adapter_position);
         spinner_position.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getContext(), position + "is selected", Toast.LENGTH_SHORT).show();
@@ -111,9 +102,7 @@ public class RegistrationFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
-
         });
-
         return rootView;
     }
 

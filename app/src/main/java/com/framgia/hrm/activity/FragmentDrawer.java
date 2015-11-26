@@ -20,11 +20,8 @@ import com.framgia.hrm.model.NavDrawerItem;
 
 import java.util.ArrayList;
 import java.util.List;
-
 public class FragmentDrawer extends Fragment {
-
     private static String TAG = FragmentDrawer.class.getSimpleName();
-
     private RecyclerView recyclerView;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
@@ -63,7 +60,6 @@ public class FragmentDrawer extends Fragment {
         // Inflating view layout
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         recyclerView = (RecyclerView) layout.findViewById(R.id.drawerList);
-
         adapter = new NavigationDrawerAdapter(getActivity(), getData());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -83,12 +79,9 @@ public class FragmentDrawer extends Fragment {
     }
 
     public void setUp(int fragmentId, DrawerLayout drawerLayout, final Toolbar toolbar) {
-
         containerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
-
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
-
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -107,7 +100,6 @@ public class FragmentDrawer extends Fragment {
                 toolbar.setAlpha(1 - slideOffset / 2);
             }
         };
-
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerLayout.post(new Runnable() {
             @Override
@@ -115,20 +107,16 @@ public class FragmentDrawer extends Fragment {
                 mDrawerToggle.syncState();
             }
         });
-
     }
 
     public interface ClickListener {
         void onClick(View view, int position);
-
         void onLongClick(View view, int position);
     }
 
     static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
-
         private GestureDetector gestureDetector;
         private ClickListener clickListener;
-
         public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener) {
             this.clickListener = clickListener;
             gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {

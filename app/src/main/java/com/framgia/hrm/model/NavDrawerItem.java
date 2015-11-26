@@ -1,5 +1,4 @@
 package com.framgia.hrm.model;
-
 /**
  * Created by sharma on 11/23/15.
  */
@@ -7,9 +6,7 @@ public class NavDrawerItem {
     private boolean showNotify;
     private String title;
 
-    public NavDrawerItem() {
-
-    }
+    public NavDrawerItem() {}
 
     public NavDrawerItem(boolean showNotify, String title) {
         this.showNotify = showNotify;

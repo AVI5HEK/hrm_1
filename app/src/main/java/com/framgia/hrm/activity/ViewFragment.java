@@ -11,7 +11,6 @@ import com.framgia.hrm.R;
 /**
  * Created by sharma on 11/23/15.
  */
-
 public class ViewFragment extends Fragment {
     public ViewFragment() {
     }

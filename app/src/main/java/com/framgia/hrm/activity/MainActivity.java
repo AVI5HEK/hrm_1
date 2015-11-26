@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import com.framgia.hrm.R;
-
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
     private static String TAG = MainActivity.class.getSimpleName();
     private Toolbar mToolbar;
@@ -62,37 +61,30 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         Fragment fragment = null;
         String title = getString(R.string.app_name);
         switch (position) {
-
             case HOME_FRAGMENT:
                 fragment = new HomeFragment();
                 title = getString(R.string.title_home);
                 break;
-
             case REGISTRATION_FRAGMENT:
                 fragment = new RegistrationFragment();
                 title = getString(R.string.title_registration);
                 break;
-
             case VIEW_FRAGMENT:
                 fragment = new ViewFragment();
                 title = getString(R.string.title_view);
                 break;
-
             case UPDATE_FRAGMENT:
                 fragment = new UpdateFragment();
                 title = getString(R.string.title_update);
                 break;
-
             default:
                 break;
         }
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_body, fragment);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();fragmentTransaction.replace(R.id.frame_container_body, fragment);
             fragmentTransaction.commit();
-
-            // set the toolbar title
+             //set the toolbar title
             getSupportActionBar().setTitle(title);
         }
     }

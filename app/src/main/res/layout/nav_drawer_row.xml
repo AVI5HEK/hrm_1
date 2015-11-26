@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     android:clickable="true">
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/text_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
-        android:paddingLeft="30dp"
-        android:paddingTop="10dp"
-        android:textSize="15dp"
+        android:paddingBottom="@dimen/nav_drawer_row_text_title_padding_bottom"
+        android:paddingLeft="@dimen/nav_drawer_row_text_title_padding_left"
+        android:paddingTop="@dimen/nav_drawer_row_text_title_padding_top"
+        android:textSize="@dimen/nav_drawer_row_text_title_text_size"
         android:textStyle="bold" />
 </RelativeLayout>
