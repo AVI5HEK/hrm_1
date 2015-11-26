@@ -1,17 +1,30 @@
 package com.framgia.hrm.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
+
 import com.framgia.hrm.R;
-public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
+import com.framgia.hrm.adapter.MyAdapter;
+import com.framgia.hrm.database.DatabaseHelper;
+import com.framgia.hrm.model.Activity;
+import com.framgia.hrm.model.Department;
+import com.framgia.hrm.model.Position;
+import com.framgia.hrm.model.Status;
+
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener,SearchView.OnQueryTextListener {
     private static String TAG = MainActivity.class.getSimpleName();
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
@@ -19,6 +32,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private final static int REGISTRATION_FRAGMENT = 1;
     private final static int VIEW_FRAGMENT = 2;
     private final static int UPDATE_FRAGMENT = 3;
+    public static SharedPreferences PREF_STATE=null;
+    public static SharedPreferences.Editor editor=null;
+    int state=0;
+    DatabaseHelper mdDatabaseHelper;
+    MyAdapter adapter;
+    ListView list_department;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +46,42 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mdDatabaseHelper=new DatabaseHelper(this);
+        list_department=(ListView)findViewById(R.id.list_department);
+
+        PREF_STATE = getApplicationContext().getSharedPreferences("MyPref",
+                MODE_PRIVATE);
+        int pref_State = PREF_STATE.getInt("state",0);
         drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
         displayView(0);
+
+        if(pref_State!=3) {
+            mdDatabaseHelper.createDepartment(new Department("HRM & ADMIN"));
+            mdDatabaseHelper.createDepartment(new Department("FINANCE & ACCOUNTS"));
+            mdDatabaseHelper.createDepartment(new Department("SELLS"));
+            mdDatabaseHelper.createDepartment(new Department("MARKETING"));
+            mdDatabaseHelper.createDepartment(new Department("OPERATIONS"));
+            mdDatabaseHelper.createStatus(new Status("TRAINEE"));
+            mdDatabaseHelper.createStatus(new Status("INTERNSHIP"));
+            mdDatabaseHelper.createStatus(new Status("OFFICIAL STAFF"));
+            mdDatabaseHelper.createPosition(new Position("CEO"));
+            mdDatabaseHelper.createPosition(new Position("MANAGER"));
+            mdDatabaseHelper.createPosition(new Position("DEPUTY MANAGER"));
+            mdDatabaseHelper.createPosition(new Position("SR. EXECUTIVE"));
+            mdDatabaseHelper.createPosition(new Position("EXECUTIVE"));
+            mdDatabaseHelper.createActivity(new Activity("ACTIVE"));
+            mdDatabaseHelper.createActivity(new Activity("INACTIVE"));
+
+        }
+        editor = PREF_STATE.edit();
+        editor.putInt("state", 3);
+        editor.commit();
+        ArrayList<Department> arrayList=mdDatabaseHelper.getAllDepartments();
+        adapter=new MyAdapter(this,arrayList);
+        list_department.setAdapter(adapter);
+
     }
 
     @Override
@@ -80,12 +131,22 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             default:
                 break;
         }
-        if (fragment != null) {
+     /*   if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();fragmentTransaction.replace(R.id.frame_container_body, fragment);
             fragmentTransaction.commit();
              //set the toolbar title
             getSupportActionBar().setTitle(title);
-        }
+        }*/
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }
