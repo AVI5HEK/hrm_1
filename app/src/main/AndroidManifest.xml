@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.framgia.hrm" >
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,8 +14,27 @@
             android:theme="@style/MyMaterialTheme.Base" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity
+            android:name=".activity.Addstaff"
+            android:label="@string/title_activity_addstaff"
+            android:theme="@style/MyMaterialTheme" >
+        </activity>
+        <activity
+            android:name=".activity.StaffDetail"
+            android:label="@string/title_activity_staff_detail"
+            android:theme="@style/MyMaterialTheme" >
         </activity>
     </application>
+
 </manifest>

@@ -62,4 +62,6 @@
         <item>SR. EXECUTIVE</item>
         <item>EXECUTIVE</item>
     </string-array>
+    <string name="title_activity_addstaff">Addstaff</string>
+    <string name="title_activity_staff_detail">StaffDetail</string>
 </resources>
