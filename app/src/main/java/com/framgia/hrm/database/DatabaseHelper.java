@@ -1,5 +1,7 @@
 package com.framgia.hrm.database;
 
+
+//// created by Abhisekh
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -23,19 +25,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * table FTS
      */
-    public static final String COLUMN_NAME = "fruits";
-    public static final String COLUMN_PHONE = "phone";
+    public static final String FTS_COLUMN_NAME = "fruits";
+    public static final String FTS_COLUMN_PHONE = "phone";
     private static final String FTS_VIRTUAL_TABLE = "staff_info";
     public static final String SEARCH_STAFF = "search_item";
     public static final String FTS_BIRTH_PLACE_FIELD = "birth_place";
     public static final String FTS_BIRTH_DATE_FIELD = "birth_date";
+    public static final String FTS_COLUMN_ID ="staff_id";
     private static final String FTS_TABLE_CREATE =
             "CREATE VIRTUAL TABLE " + FTS_VIRTUAL_TABLE +
                     " USING fts3 (" +
-                    COLUMN_NAME + ", " +
+                    FTS_COLUMN_ID+", "+
+                    FTS_COLUMN_NAME + ", " +
                     FTS_BIRTH_DATE_FIELD + ", " +
                     FTS_BIRTH_PLACE_FIELD + ", " +
-                    COLUMN_PHONE + ", " +
+                    FTS_COLUMN_PHONE + ", " +
                     SEARCH_STAFF +
                     ")";
     /**
@@ -134,6 +138,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_POSITION);
         db.execSQL(CREATE_TABLE_ACTIVITY);
         db.execSQL(CREATE_TABLE_STAFF);
+        db.execSQL(FTS_TABLE_CREATE);
     }
 
     @Override
@@ -192,13 +197,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param searchfts
      * @return
      */
-    long insert_searchitem(SearchStaff searchfts) {
+    public long insert_searchitem(SearchStaff searchfts) {
         String searchValue = searchfts.name + " " +
                 searchfts.phone;
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME, searchfts.name);
-        values.put(COLUMN_PHONE, searchfts.phone);
+        values.put(FTS_COLUMN_ID, searchfts.id);
+        values.put(FTS_COLUMN_NAME, searchfts.name);
+        values.put(FTS_COLUMN_PHONE, searchfts.phone);
         values.put(FTS_BIRTH_DATE_FIELD, searchfts.birth_date);
         values.put(FTS_BIRTH_DATE_FIELD, searchfts.birth_place);
         values.put(SEARCH_STAFF, searchValue);
@@ -206,6 +212,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long inserted = database.insert(FTS_VIRTUAL_TABLE, null, values);
         return inserted;
     }
+
+    public ArrayList<SearchStaff> data() {
+
+        SQLiteDatabase database = myDbHelper.getReadableDatabase();
+        ArrayList<SearchStaff> arrayList = new ArrayList<SearchStaff>();
+        String query = "SELECT * FROM " + TABLE_STAFF;
+
+        Cursor cursor = database.rawQuery(query, null);
+        int length=cursor.getCount();
+        Log.e("Count : ",length+" ");
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            for (int i = 0; i < cursor.getCount(); i++) {
+                int id=cursor.getInt(cursor.getColumnIndex(STAFF_COLUMN_ID));
+                String name = cursor.getString(cursor.getColumnIndex(STAFF_COLUMN_NAME));
+                String phone = cursor.getString(cursor.getColumnIndex(STAFF_COLUMN_PHONE_NUMBER));
+                String place = cursor.getString(cursor.getColumnIndex(STAFF_COLUMN_BIRTH_PLACE));
+                String date = cursor.getString(cursor.getColumnIndex(STAFF_COLUMN_DATE_OF_BIRTH));
+                Log.e("Phone number : ",name);
+                arrayList.add(new SearchStaff(id,name, phone,place,date));
+                cursor.moveToNext();
+
+            }
+        }
+        return arrayList;
+    }
+
     /**
      * Search Staff
      *
@@ -216,7 +250,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor searchByInputText(String inputText) throws SQLException {
         SQLiteDatabase database = this.getReadableDatabase();
         String query = "SELECT docid as _id," +
-                COLUMN_NAME + " , " + COLUMN_PHONE + " , " + FTS_BIRTH_PLACE_FIELD + " , " + FTS_BIRTH_DATE_FIELD + " from " + FTS_VIRTUAL_TABLE +
+                FTS_COLUMN_NAME + " , " +FTS_COLUMN_PHONE + " , " + FTS_BIRTH_PLACE_FIELD + " , " + FTS_BIRTH_DATE_FIELD + " from " + FTS_VIRTUAL_TABLE +
                 " where " + SEARCH_STAFF + " MATCH '" + inputText + "';";
         Cursor mCursor = database.rawQuery(query, null);
         if (mCursor != null) {mCursor.moveToFirst();

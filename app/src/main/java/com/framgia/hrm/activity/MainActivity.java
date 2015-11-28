@@ -1,6 +1,8 @@
 package com.framgia.hrm.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import com.framgia.hrm.R;
 import com.framgia.hrm.adapter.MyAdapter;
@@ -20,8 +25,10 @@ import com.framgia.hrm.database.DatabaseHelper;
 import com.framgia.hrm.model.Activity;
 import com.framgia.hrm.model.Department;
 import com.framgia.hrm.model.Position;
+import com.framgia.hrm.model.SearchStaff;
 import com.framgia.hrm.model.Status;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener,SearchView.OnQueryTextListener {
@@ -84,6 +91,17 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     }
 
+    public void add_data(){
+
+        ArrayList<SearchStaff> arrayList=mdDatabaseHelper.data();
+        for(SearchStaff staff:arrayList){
+
+            mdDatabaseHelper.insert_searchitem(staff);
+        }
+
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -139,14 +157,95 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             getSupportActionBar().setTitle(title);
         }*/
     }
+    private void displayResults(String query) throws SQLException {
+       // mDbHelper.db_value();
+        add_data();
+        Cursor cursor = mdDatabaseHelper.searchByInputText((query != null ? query : "@@@@"));
+
+        if (cursor != null) {
+
+            String[] from = new String[]{mdDatabaseHelper.FTS_COLUMN_NAME, mdDatabaseHelper.FTS_COLUMN_PHONE,
+                    mdDatabaseHelper.FTS_BIRTH_PLACE_FIELD,mdDatabaseHelper.FTS_BIRTH_DATE_FIELD};
+
+              /*  for (int i=0;i<from.length;i++){
+
+                    Toast.makeText(getApplicationContext(),"From  "+from[i],Toast.LENGTH_LONG).show();
+
+                }*/
+
+
+            int[] to = new int[]{R.id.search_result_text_view, R.id.result_number, R.id.birth_place,R.id.birth_date};
+
+            SimpleCursorAdapter cursorAdapter1 = new SimpleCursorAdapter(this, R.layout.result_search_item, cursor, from, to);
+            SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.result_search_item, cursor, from, to, 1);
+            if (cursorAdapter.getCount() > 0)
+                list_department.setAdapter(cursorAdapter);
+
+            final String staff_id=mdDatabaseHelper.FTS_COLUMN_ID;
+
+            //listview Click listener
+            list_department.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    //   Cursor cursor = (Cursor) myList.getItemAtPosition(position);
+
+                    //  String selectedName = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                    Toast.makeText(MainActivity.this, "selectedName :" + staff_id, Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplication(), StaffDetail.class);
+                    intent.putExtra("ID", id);
+                    startActivity(intent);
+                     /*   myList.setAdapter(defaultAdapter);
+
+                        for (int pos = 0; pos < nameList.size(); pos++) {
+                            if (nameList.get(pos).equals(selectedName)) {
+                                position = pos;
+                                break;
+                            }
+                        }
+
+                        android.os.Handler handler = new android.os.Handler();
+                        final int finalPosition = position;
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                myList.setSelection(finalPosition);
+                            }
+                        });
+
+                        searchView.setQuery("", true);*/
+                }
+            });
+
+        }
+    }
+
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        try {
+            displayResults(query + "*");
+            // showResults(query + "*");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
+
+        if(!newText.isEmpty()){
+
+            try {
+                displayResults(newText+"*");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }else
+        list_department.setAdapter(adapter);
+
         return false;
     }
 }
