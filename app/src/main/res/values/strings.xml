@@ -29,6 +29,8 @@
     <string name="fragment_update_text_2_text">Edit fragment_update.xml to change the appearance</string>
     <string name="fragment_home_text_1_text">HOME</string>
     <string name="fragment_home_text_2_text">Edit fragment_home.xml to change the appearance</string>
+    <string name="staff_list_title">Staffs</string>
+    <string name="activity_staff_text_staffs_text_size">adkfjdsakjfa</string>
     <string-array name="nav_drawer_labels">
         <item>@string/nav_item_home</item>
         <item>@string/nav_item_registration</item>

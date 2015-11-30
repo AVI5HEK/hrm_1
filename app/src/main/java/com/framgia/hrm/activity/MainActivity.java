@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -31,7 +29,7 @@ import com.framgia.hrm.model.Status;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener,SearchView.OnQueryTextListener {
+public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchView.OnQueryTextListener {
     private static String TAG = MainActivity.class.getSimpleName();
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
@@ -39,10 +37,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private final static int REGISTRATION_FRAGMENT = 1;
     private final static int VIEW_FRAGMENT = 2;
     private final static int UPDATE_FRAGMENT = 3;
-    public static SharedPreferences PREF_STATE=null;
-    public static SharedPreferences.Editor editor=null;
-    int state=0;
-    DatabaseHelper mdDatabaseHelper;
+    public static SharedPreferences PREF_STATE = null;
+    public static SharedPreferences.Editor editor = null;
+    int state = 0;
+    private static final String BUNDLE_ID = "id";
+    DatabaseHelper mDatabaseHelper;
     MyAdapter adapter;
     ListView list_department;
 
@@ -53,50 +52,56 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        mdDatabaseHelper=new DatabaseHelper(this);
-        list_department=(ListView)findViewById(R.id.list_department);
-
+        mDatabaseHelper = new DatabaseHelper(this);
+        list_department = (ListView) findViewById(R.id.list_department);
         PREF_STATE = getApplicationContext().getSharedPreferences("MyPref",
                 MODE_PRIVATE);
-        int pref_State = PREF_STATE.getInt("state",0);
+        int pref_State = PREF_STATE.getInt("state", 0);
         drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
         displayView(0);
-
-        if(pref_State!=3) {
-            mdDatabaseHelper.createDepartment(new Department("HRM & ADMIN"));
-            mdDatabaseHelper.createDepartment(new Department("FINANCE & ACCOUNTS"));
-            mdDatabaseHelper.createDepartment(new Department("SELLS"));
-            mdDatabaseHelper.createDepartment(new Department("MARKETING"));
-            mdDatabaseHelper.createDepartment(new Department("OPERATIONS"));
-            mdDatabaseHelper.createStatus(new Status("TRAINEE"));
-            mdDatabaseHelper.createStatus(new Status("INTERNSHIP"));
-            mdDatabaseHelper.createStatus(new Status("OFFICIAL STAFF"));
-            mdDatabaseHelper.createPosition(new Position("CEO"));
-            mdDatabaseHelper.createPosition(new Position("MANAGER"));
-            mdDatabaseHelper.createPosition(new Position("DEPUTY MANAGER"));
-            mdDatabaseHelper.createPosition(new Position("SR. EXECUTIVE"));
-            mdDatabaseHelper.createPosition(new Position("EXECUTIVE"));
-            mdDatabaseHelper.createActivity(new Activity("ACTIVE"));
-            mdDatabaseHelper.createActivity(new Activity("INACTIVE"));
+        if (pref_State != 3) {
+            mCreateDepartmentList();
+            mCreateStatusList();
+            mCreatePositionList();
+            mCreateActivityList();
 
         }
         editor = PREF_STATE.edit();
         editor.putInt("state", 3);
         editor.commit();
-        ArrayList<Department> arrayList=mdDatabaseHelper.getAllDepartments();
-        adapter=new MyAdapter(this,arrayList);
+        /*if (!mDatabaseHelper.departmentTableExists() && !mDatabaseHelper.statusTableExists() &&
+                !mDatabaseHelper.positionTableExists() && !mDatabaseHelper.activityTableExists()) {
+            mCreateDepartmentList();
+            mCreateStatusList();
+            mCreatePositionList();
+            mCreateActivityList();
+        }*/
+        ArrayList<Department> arrayList = mDatabaseHelper.getAllDepartments();
+        adapter = new MyAdapter(this, arrayList);
         list_department.setAdapter(adapter);
-
+        list_department.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int idToSearch = position + 1;
+                Bundle dataBundle = new Bundle();
+                dataBundle.putLong(BUNDLE_ID, idToSearch);
+                Intent intent = new Intent(getApplicationContext(), com.framgia.hrm.activity
+                        .StaffListActivity.class);
+                intent.putExtras(dataBundle);
+                startActivity(intent);
+            }
+        });
+        mDatabaseHelper.closeDB();
     }
 
-    public void add_data(){
+    public void add_data() {
 
-        ArrayList<SearchStaff> arrayList=mdDatabaseHelper.data();
-        for(SearchStaff staff:arrayList){
+        ArrayList<SearchStaff> arrayList = mDatabaseHelper.data();
+        for (SearchStaff staff : arrayList) {
 
-            mdDatabaseHelper.insert_searchitem(staff);
+            mDatabaseHelper.insert_searchitem(staff);
         }
 
     }
@@ -137,6 +142,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             case REGISTRATION_FRAGMENT:
                 fragment = new RegistrationFragment();
                 title = getString(R.string.title_registration);
+                Intent intent = new Intent(getApplicationContext(), Addstaff.class);
+                startActivity(intent);
                 break;
             case VIEW_FRAGMENT:
                 fragment = new ViewFragment();
@@ -157,15 +164,16 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             getSupportActionBar().setTitle(title);
         }*/
     }
+
     private void displayResults(String query) throws SQLException {
-       // mDbHelper.db_value();
+        // mDbHelper.db_value();
         add_data();
-        Cursor cursor = mdDatabaseHelper.searchByInputText((query != null ? query : "@@@@"));
+        Cursor cursor = mDatabaseHelper.searchByInputText((query != null ? query : "@@@@"));
 
         if (cursor != null) {
 
-            String[] from = new String[]{mdDatabaseHelper.FTS_COLUMN_NAME, mdDatabaseHelper.FTS_COLUMN_PHONE,
-                    mdDatabaseHelper.FTS_BIRTH_PLACE_FIELD,mdDatabaseHelper.FTS_BIRTH_DATE_FIELD};
+            String[] from = new String[]{mDatabaseHelper.FTS_COLUMN_NAME, mDatabaseHelper.FTS_COLUMN_PHONE,
+                    mDatabaseHelper.FTS_BIRTH_PLACE_FIELD, mDatabaseHelper.FTS_BIRTH_DATE_FIELD};
 
               /*  for (int i=0;i<from.length;i++){
 
@@ -174,14 +182,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 }*/
 
 
-            int[] to = new int[]{R.id.search_result_text_view, R.id.result_number, R.id.birth_place,R.id.birth_date};
+            int[] to = new int[]{R.id.search_result_text_view, R.id.result_number, R.id.birth_place, R.id.birth_date};
 
             SimpleCursorAdapter cursorAdapter1 = new SimpleCursorAdapter(this, R.layout.result_search_item, cursor, from, to);
             SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.result_search_item, cursor, from, to, 1);
             if (cursorAdapter.getCount() > 0)
                 list_department.setAdapter(cursorAdapter);
 
-            final String staff_id=mdDatabaseHelper.FTS_COLUMN_ID;
+            final String staff_id = mDatabaseHelper.FTS_COLUMN_ID;
 
             //listview Click listener
             list_department.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -235,17 +243,44 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     public boolean onQueryTextChange(String newText) {
 
-        if(!newText.isEmpty()){
+        if (!newText.isEmpty()) {
 
             try {
-                displayResults(newText+"*");
+                displayResults(newText + "*");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
 
-        }else
-        list_department.setAdapter(adapter);
+        } else
+            list_department.setAdapter(adapter);
 
         return false;
+    }
+
+    private void mCreateDepartmentList() {
+        mDatabaseHelper.createDepartment(new Department("HRM & ADMIN"));
+        mDatabaseHelper.createDepartment(new Department("FINANCE & ACCOUNTS"));
+        mDatabaseHelper.createDepartment(new Department("SELLS"));
+        mDatabaseHelper.createDepartment(new Department("MARKETING"));
+        mDatabaseHelper.createDepartment(new Department("OPERATIONS"));
+    }
+
+    private void mCreateStatusList() {
+        mDatabaseHelper.createStatus(new Status("TRAINEE"));
+        mDatabaseHelper.createStatus(new Status("INTERNSHIP"));
+        mDatabaseHelper.createStatus(new Status("OFFICIAL STAFF"));
+    }
+
+    private void mCreatePositionList() {
+        mDatabaseHelper.createPosition(new Position("CEO"));
+        mDatabaseHelper.createPosition(new Position("MANAGER"));
+        mDatabaseHelper.createPosition(new Position("DEPUTY MANAGER"));
+        mDatabaseHelper.createPosition(new Position("SR. EXECUTIVE"));
+        mDatabaseHelper.createPosition(new Position("EXECUTIVE"));
+    }
+
+    private void mCreateActivityList() {
+        mDatabaseHelper.createActivity(new Activity("ACTIVE"));
+        mDatabaseHelper.createActivity(new Activity("INACTIVE"));
     }
 }
