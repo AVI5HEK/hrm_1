@@ -35,6 +35,8 @@
             android:label="@string/title_activity_staff_detail"
             android:theme="@style/MyMaterialTheme" >
         </activity>
+        <activity android:name=".activity.StaffListActivity" >
+        </activity>
     </application>
 
 </manifest>
