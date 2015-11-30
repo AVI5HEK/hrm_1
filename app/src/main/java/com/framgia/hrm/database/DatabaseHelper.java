@@ -1,6 +1,4 @@
 package com.framgia.hrm.database;
-
-
 //// created by Abhisekh
 import android.content.ContentValues;
 import android.content.Context;
@@ -128,11 +126,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             " KEY(" + STAFF_COLUMN_ACTIVITY + ") REFERENCES " + TABLE_ACTIVITY + "" +
             "(" + ACTIVITY_COLUMN_ID + "), FOREIGN KEY (" + STAFF_COLUMN_POSITION + ") REFERENCES " +
             "" + TABLE_POSITION + "(" + POSITION_COLUMN_ID + "))";
-
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_DEPARTMENT);
@@ -142,7 +138,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_STAFF);
         db.execSQL(FTS_TABLE_CREATE);
     }
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DEPARTMENT);
@@ -214,17 +209,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long inserted = database.insert(FTS_VIRTUAL_TABLE, null, values);
         return inserted;
     }
-
     public ArrayList<SearchStaff> data() {
-
         SQLiteDatabase database = myDbHelper.getReadableDatabase();
         ArrayList<SearchStaff> arrayList = new ArrayList<SearchStaff>();
         String query = "SELECT * FROM " + TABLE_STAFF;
-
         Cursor cursor = database.rawQuery(query, null);
         int length=cursor.getCount();
         Log.e("Count : ",length+" ");
-
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             for (int i = 0; i < cursor.getCount(); i++) {
@@ -236,12 +227,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 Log.e("Phone number : ",name);
                 arrayList.add(new SearchStaff(id,name, phone,place,date));
                 cursor.moveToNext();
-
             }
         }
         return arrayList;
     }
-
     /**
      * Search Staff
      *
@@ -269,7 +258,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long act_id = db.insert(TABLE_ACTIVITY, null, values);
         return act_id;
     }
-
     /**
      * Creating staff
      */
@@ -287,9 +275,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long staff_id = db.insert(TABLE_STAFF, null, values);
         return staff_id;
     }
-
-    /**Reader methods*/
-
     /**
      * Getting a single Department
      */
@@ -304,7 +289,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         dept.setDept_name(c.getString(c.getColumnIndex(DEPARTMENT_COLUMN_NAME)));
         return dept;
     }*/
-
     /**
      * Getting all the Departments
      * this needs to changed. ArrayList >> List
@@ -326,7 +310,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return departments;
     }
-
     /**
      * Getting staffs by department
      */
@@ -388,16 +371,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 staffs.add(staff);
             } while (c.moveToNext());
         }
-
         return staffs;*//*
         return arrayListName;
     }*/
-
     /**the tables below will be used later*/
     /**
      * Getting staff by id
      */
-    public Staff getStaffById(long staff_id) {
+        public Staff getStaffById(long staff_id){
         SQLiteDatabase db = this.getReadableDatabase();
         String selectQuery = "SELECT * FROM " + TABLE_STAFF + " WHERE " + STAFF_COLUMN_ID + " =" +
                 " " + staff_id;
@@ -415,7 +396,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         staff.setPosition_id(c.getInt(c.getColumnIndex(STAFF_COLUMN_POSITION)));
         return staff;
     }
-
     /**
      * Getting department by id
      */
@@ -430,7 +410,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         dept.setDept_name(c.getString(c.getColumnIndex(DEPARTMENT_COLUMN_NAME)));
         return dept;
     }
-
     /**
      * Getting status by id
      */
@@ -446,7 +425,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         status.setStatus_name(c.getString(c.getColumnIndex(STATUS_COLUMN_NAME)));
         return status;
     }
-
     /**
      * Getting position by id
      */
@@ -461,7 +439,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         pos.setPosition_name(c.getString(c.getColumnIndex(POSITION_COLUMN_NAME)));
         return pos;
     }
-
     /**
      * Getting activity by id
      */
@@ -476,13 +453,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         act.setActivity_name(c.getString(c.getColumnIndex(ACTIVITY_COLUMN_NAME)));
         return act;
     }
-
-    /** Update methods */
-
     /**
      * Update staff by id
      */
-    public int updateStaff(Staff staff) {
+    public int updateStaff(Staff staff,long id) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(STAFF_COLUMN_NAME, staff.getName());
@@ -493,13 +467,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(STAFF_COLUMN_STATUS, staff.getStatus_id());
         values.put(STAFF_COLUMN_ACTIVITY, staff.getActivity_id());
         values.put(STAFF_COLUMN_POSITION, staff.getPosition_id());
-
         // updating row
-        return db.update(TABLE_STAFF, values, STAFF_COLUMN_ID + " = ?",
-                new String[]{String.valueOf(staff.getStaff_id())});
+        return db.update(TABLE_STAFF, values, STAFF_COLUMN_ID + " = " +id,null);
     }
-    /** Delete methods */
-
     /**
      * Delete staff by id
      */
@@ -528,7 +498,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return false;
         }
     }
-
     *//**
      * Checks if status table exists
      *//*
@@ -548,7 +517,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return false;
         }
     }
-
     *//**
      * Checks if position table exists
      *//*

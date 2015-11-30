@@ -37,6 +37,7 @@ public class Addstaff extends AppCompatActivity {
     private int mActivity, mDept, mStatus, mPosition;
     private Button mAddbutton;
     private String BUNDLE_ID = "id";
+    private String EXTRA_ID = "id";
     /**id for departments*/
     private static final int HRM_AND_ADMIN = 0;
     private static final int FINANCE_AND_ACCOUNTS = 1;
@@ -56,6 +57,7 @@ public class Addstaff extends AppCompatActivity {
     /**IDs for activity*/
     private static final int ACTIVE = 0;
     private static final int INACTIVE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,124 +84,272 @@ public class Addstaff extends AppCompatActivity {
         mSdept = (Spinner) findViewById(R.id.spinner_dept);
         mSstatus = (Spinner) findViewById(R.id.spinner_status);
         mSposition = (Spinner) findViewById(R.id.spinner_position);
-        set_date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setDatefield();
-            }
-        });
-        mSactivity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case ACTIVE:
-                        mActivity = 1;
-                        break;
-                    case INACTIVE:
-                        mActivity = 2;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-        mSdept.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case HRM_AND_ADMIN:
-                        mDept = 1;
-                        break;
-                    case FINANCE_AND_ACCOUNTS:
-                        mDept = 2;
-                        break;
-                    case SELLS:
-                        mDept = 3;
-                        break;
-                    case MARKETING:
-                        mDept = 4;
-                        break;
-                    case OPERATIONS:
-                        mDept = 5;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-        mSstatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case TRAINEE:
-                        mStatus = 1;
-                        break;
-                    case INTERNSHIP:
-                        mStatus = 2;
-                        break;
-                    case OFFICIAL_STAFF:
-                        mStatus = 3;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-        mSposition.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case CEO:
-                        mPosition = 1;
-                        break;
-                    case MANAGER:
-                        mPosition = 2;
-                        break;
-                    case DEPUTY_MANAGER:
-                        mPosition = 3;
-                        break;
-                    case SR_EXECUTIVE:
-                        mPosition = 4;
-                        break;
-                    case EXECUTIVE:
-                        mPosition = 5;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-        mAddbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mName = mEditName.getText().toString();
-                mPhone = mEditPhone.getText().toString();
-                mBplace = mBirthPlace.getText().toString();
-                mBirthday = mCalenderId.getText().toString();
-                Staff staff = new Staff(mName, mBirthday, mBplace, mPhone, mDept, mStatus, mActivity,
-                        mPosition);
-                long staff_id = mDb.createStaff(staff);
-                mDb.closeDB();
-                Toast.makeText(getApplicationContext(), "New staff added", Toast.LENGTH_SHORT).show();
-                Bundle dataBundle = new Bundle();
-                dataBundle.putLong(BUNDLE_ID, staff_id);
-                Intent intent = new Intent(getApplicationContext(), StaffDetail.class);
-                intent.putExtras(dataBundle);
-                startActivity(intent);
-            }
-        });
+        Bundle extras = getIntent().getExtras();
+        final long staff_id = extras.getLong(EXTRA_ID);
+       if(staff_id != 0L)
+       {
+           DatabaseHelper mDatabaseHelper=new DatabaseHelper(this);
+           Staff staff = mDatabaseHelper.getStaffById(staff_id);
+           mEditName.setText( staff.getName());
+           mBirthPlace.setText(staff.getBirth_place());
+           mEditPhone.setText(staff.getPhone_number());
+           mCalenderId.setText(staff.getDate_of_birth());
+           mSdept.setSelection(staff.getDept_id()-1);
+           mSstatus.setSelection(staff.getStatus_id()-1);
+           mSactivity.setSelection(staff.getActivity_id()-1);
+           mSposition.setSelection(staff.getPosition_id()-1);
+           mDatabaseHelper.closeDB();
+           //for updation****************************************************************
+           set_date.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   setDatefield();
+               }
+           });
+
+           mSactivity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+               @Override
+               public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                   switch (position) {
+                       case ACTIVE:
+                           mActivity = 1;
+                           break;
+                       case INACTIVE:
+                           mActivity = 2;
+                           break;
+                       default:
+                           break;
+                   }
+               }
+
+               @Override
+               public void onNothingSelected(AdapterView<?> parent) {
+               }
+           });
+
+           mSdept.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+               @Override
+               public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                   switch (position) {
+                       case HRM_AND_ADMIN:
+                           mDept = 1;
+                           break;
+                       case FINANCE_AND_ACCOUNTS:
+                           mDept = 2;
+                           break;
+                       case SELLS:
+                           mDept = 3;
+                           break;
+                       case MARKETING:
+                           mDept = 4;
+                           break;
+                       case OPERATIONS:
+                           mDept = 5;
+                           break;
+                       default:
+                           break;
+                   }
+               }
+               @Override
+               public void onNothingSelected(AdapterView<?> parent) {
+               }
+           });
+
+           mSstatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+               @Override
+               public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                   switch (position) {
+                       case TRAINEE:
+                           mStatus = 1;
+                           break;
+                       case INTERNSHIP:
+                           mStatus = 2;
+                           break;
+                       case OFFICIAL_STAFF:
+                           mStatus = 3;
+                           break;
+                       default:
+                           break;
+                   }
+               }
+               @Override
+               public void onNothingSelected(AdapterView<?> parent) {
+               }
+           });
+
+           mSposition.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+               @Override
+               public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                   switch (position) {
+                       case CEO:
+                           mPosition = 1;
+                           break;
+                       case MANAGER:
+                           mPosition = 2;
+                           break;
+                       case DEPUTY_MANAGER:
+                           mPosition = 3;
+                           break;
+                       case SR_EXECUTIVE:
+                           mPosition = 4;
+                           break;
+                       case EXECUTIVE:
+                           mPosition = 5;
+                           break;
+                       default:
+                           break;
+                   }
+               }
+               @Override
+               public void onNothingSelected(AdapterView<?> parent) {
+               }
+           });
+
+           mAddbutton.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   mName = mEditName.getText().toString();
+                   mPhone = mEditPhone.getText().toString();
+                   mBplace = mBirthPlace.getText().toString();
+                   mBirthday = mCalenderId.getText().toString();
+
+                   Staff staff = new Staff(mName, mBirthday, mBplace, mPhone, mDept, mStatus, mActivity,
+                           mPosition);
+                   int  t = mDb.updateStaff(staff,staff_id);
+
+                   Toast.makeText(getApplicationContext(), "updated", Toast.LENGTH_SHORT).show();
+                   Bundle dataBundle = new Bundle();
+                   dataBundle.putLong(BUNDLE_ID, staff_id);
+                   Intent intent = new Intent(getApplicationContext(), StaffDetail.class);
+                   intent.putExtras(dataBundle);
+                   startActivity(intent);
+                   mDb.closeDB();
+               }
+           });
+           //****************************************************************************
+       }
+        else {
+
+           set_date.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   setDatefield();
+               }
+           });
+
+           mSactivity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+               @Override
+               public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                   switch (position) {
+                       case ACTIVE:
+                           mActivity = 1;
+                           break;
+                       case INACTIVE:
+                           mActivity = 2;
+                           break;
+                       default:
+                           break;
+                   }
+               }
+               @Override
+               public void onNothingSelected(AdapterView<?> parent) {
+               }
+           });
+           mSdept.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+               @Override
+               public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                   switch (position) {
+                       case HRM_AND_ADMIN:
+                           mDept = 1;
+                           break;
+                       case FINANCE_AND_ACCOUNTS:
+                           mDept = 2;
+                           break;
+                       case SELLS:
+                           mDept = 3;
+                           break;
+                       case MARKETING:
+                           mDept = 4;
+                           break;
+                       case OPERATIONS:
+                           mDept = 5;
+                           break;
+                       default:
+                           break;
+                   }
+               }
+               @Override
+               public void onNothingSelected(AdapterView<?> parent) {
+               }
+           });
+           mSstatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+               @Override
+               public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                   switch (position) {
+                       case TRAINEE:
+                           mStatus = 1;
+                           break;
+                       case INTERNSHIP:
+                           mStatus = 2;
+                           break;
+                       case OFFICIAL_STAFF:
+                           mStatus = 3;
+                           break;
+                       default:
+                           break;
+                   }
+               }
+               @Override
+               public void onNothingSelected(AdapterView<?> parent) {
+               }
+           });
+           mSposition.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+               @Override
+               public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                   switch (position) {
+                       case CEO:
+                           mPosition = 1;
+                           break;
+                       case MANAGER:
+                           mPosition = 2;
+                           break;
+                       case DEPUTY_MANAGER:
+                           mPosition = 3;
+                           break;
+                       case SR_EXECUTIVE:
+                           mPosition = 4;
+                           break;
+                       case EXECUTIVE:
+                           mPosition = 5;
+                           break;
+                       default:
+                           break;
+                   }
+               }
+               @Override
+               public void onNothingSelected(AdapterView<?> parent) {
+               }
+           });
+           mAddbutton.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   mName = mEditName.getText().toString();
+                   mPhone = mEditPhone.getText().toString();
+                   mBplace = mBirthPlace.getText().toString();
+                   mBirthday = mCalenderId.getText().toString();
+                   Staff staff = new Staff(mName, mBirthday, mBplace, mPhone, mDept, mStatus, mActivity,
+                           mPosition);
+                   long staff_id = mDb.createStaff(staff);
+                   mDb.closeDB();
+                   Toast.makeText(getApplicationContext(), "New staff added", Toast.LENGTH_SHORT).show();
+                   Bundle dataBundle = new Bundle();
+                   dataBundle.putLong(BUNDLE_ID, staff_id);
+                   Intent intent = new Intent(getApplicationContext(), StaffDetail.class);
+                   intent.putExtras(dataBundle);
+                   startActivity(intent);
+               }
+           });
+       }
     }
 
     public void setDatefield() {
