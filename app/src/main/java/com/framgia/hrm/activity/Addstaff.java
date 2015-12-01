@@ -86,18 +86,18 @@ public class Addstaff extends AppCompatActivity {
         mSposition = (Spinner) findViewById(R.id.spinner_position);
         Bundle extras = getIntent().getExtras();
         final long staff_id = extras.getLong(EXTRA_ID);
-       if(staff_id != 0L)
+       if(staff_id != 0)
        {
            DatabaseHelper mDatabaseHelper=new DatabaseHelper(this);
            Staff staff = mDatabaseHelper.getStaffById(staff_id);
-           mEditName.setText( staff.getName());
+           mEditName.setText(staff.getName());
            mBirthPlace.setText(staff.getBirth_place());
            mEditPhone.setText(staff.getPhone_number());
            mCalenderId.setText(staff.getDate_of_birth());
-           mSdept.setSelection(staff.getDept_id()-1);
-           mSstatus.setSelection(staff.getStatus_id()-1);
-           mSactivity.setSelection(staff.getActivity_id()-1);
-           mSposition.setSelection(staff.getPosition_id()-1);
+           mSdept.setSelection(staff.getDept_id() - 1);
+           mSstatus.setSelection(staff.getStatus_id() - 1);
+           mSactivity.setSelection(staff.getActivity_id() - 1);
+           mSposition.setSelection(staff.getPosition_id() - 1);
            mDatabaseHelper.closeDB();
            //for updation****************************************************************
            set_date.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +106,6 @@ public class Addstaff extends AppCompatActivity {
                    setDatefield();
                }
            });
-
            mSactivity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                @Override
                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -124,9 +123,10 @@ public class Addstaff extends AppCompatActivity {
 
                @Override
                public void onNothingSelected(AdapterView<?> parent) {
+                   Toast.makeText(getApplicationContext(), "Nothing Selected!", Toast
+                           .LENGTH_SHORT).show();
                }
            });
-
            mSdept.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                @Override
                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -152,9 +152,10 @@ public class Addstaff extends AppCompatActivity {
                }
                @Override
                public void onNothingSelected(AdapterView<?> parent) {
+                   Toast.makeText(getApplicationContext(), "Nothing Selected!", Toast
+                           .LENGTH_SHORT).show();
                }
            });
-
            mSstatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                @Override
                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -174,9 +175,10 @@ public class Addstaff extends AppCompatActivity {
                }
                @Override
                public void onNothingSelected(AdapterView<?> parent) {
+                   Toast.makeText(getApplicationContext(), "Nothing Selected!", Toast
+                           .LENGTH_SHORT).show();
                }
            });
-
            mSposition.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                @Override
                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -202,9 +204,10 @@ public class Addstaff extends AppCompatActivity {
                }
                @Override
                public void onNothingSelected(AdapterView<?> parent) {
+                   Toast.makeText(getApplicationContext(), "Nothing Selected!", Toast
+                           .LENGTH_SHORT).show();
                }
            });
-
            mAddbutton.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View v) {
@@ -224,19 +227,18 @@ public class Addstaff extends AppCompatActivity {
                    intent.putExtras(dataBundle);
                    startActivity(intent);
                    mDb.closeDB();
+                   finish();
                }
            });
            //****************************************************************************
        }
         else {
-
            set_date.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View v) {
                    setDatefield();
                }
            });
-
            mSactivity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                @Override
                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -253,6 +255,8 @@ public class Addstaff extends AppCompatActivity {
                }
                @Override
                public void onNothingSelected(AdapterView<?> parent) {
+                   Toast.makeText(getApplicationContext(), "Nothing Selected!", Toast
+                           .LENGTH_SHORT).show();
                }
            });
            mSdept.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -280,6 +284,8 @@ public class Addstaff extends AppCompatActivity {
                }
                @Override
                public void onNothingSelected(AdapterView<?> parent) {
+                   Toast.makeText(getApplicationContext(), "Nothing Selected!", Toast
+                           .LENGTH_SHORT).show();
                }
            });
            mSstatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -301,6 +307,8 @@ public class Addstaff extends AppCompatActivity {
                }
                @Override
                public void onNothingSelected(AdapterView<?> parent) {
+                   Toast.makeText(getApplicationContext(), "Nothing Selected!", Toast
+                           .LENGTH_SHORT).show();
                }
            });
            mSposition.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -328,6 +336,8 @@ public class Addstaff extends AppCompatActivity {
                }
                @Override
                public void onNothingSelected(AdapterView<?> parent) {
+                   Toast.makeText(getApplicationContext(), "Nothing Selected!", Toast
+                           .LENGTH_SHORT).show();
                }
            });
            mAddbutton.setOnClickListener(new View.OnClickListener() {
@@ -347,6 +357,7 @@ public class Addstaff extends AppCompatActivity {
                    Intent intent = new Intent(getApplicationContext(), StaffDetail.class);
                    intent.putExtras(dataBundle);
                    startActivity(intent);
+                   finish();
                }
            });
        }

@@ -45,4 +45,8 @@
     <dimen name="fragment_navigation_drawer_relative_layout_margin_top">15dp</dimen>
     <dimen name="activity_staff_text_staffs_text_size">30dp</dimen>
     <dimen name="content_staff_detail_text_size">20dp</dimen>
+    <dimen name="staff_list_text_staff_list_margin_top">10dp</dimen>
+    <dimen name="staff_list_text_staff_list_margin_bottom">10dp</dimen>
+    <dimen name="staff_list_text_staff_list_padding">5dp</dimen>
+    <dimen name="staff_list_text_staff_list_text_size">20sp</dimen>
 </resources>

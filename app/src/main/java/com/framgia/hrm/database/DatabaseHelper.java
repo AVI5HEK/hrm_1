@@ -1,5 +1,6 @@
 package com.framgia.hrm.database;
 //// created by Abhisekh
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,9 +14,11 @@ import com.framgia.hrm.model.Position;
 import com.framgia.hrm.model.SearchStaff;
 import com.framgia.hrm.model.Staff;
 import com.framgia.hrm.model.Status;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "HRM.db";
     private static final int DATABASE_VERSION = 1;
@@ -31,11 +34,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String SEARCH_STAFF = "search_item";
     public static final String FTS_BIRTH_PLACE_FIELD = "birth_place";
     public static final String FTS_BIRTH_DATE_FIELD = "birth_date";
-    public static final String FTS_COLUMN_ID ="staff_id";
+    public static final String FTS_COLUMN_ID = "staff_id";
     private static final String FTS_TABLE_CREATE =
             "CREATE VIRTUAL TABLE " + FTS_VIRTUAL_TABLE +
                     " USING fts3 (" +
-                    FTS_COLUMN_ID+", "+
+                    FTS_COLUMN_ID + ", " +
                     FTS_COLUMN_NAME + ", " +
                     FTS_BIRTH_DATE_FIELD + ", " +
                     FTS_BIRTH_PLACE_FIELD + ", " +
@@ -126,9 +129,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             " KEY(" + STAFF_COLUMN_ACTIVITY + ") REFERENCES " + TABLE_ACTIVITY + "" +
             "(" + ACTIVITY_COLUMN_ID + "), FOREIGN KEY (" + STAFF_COLUMN_POSITION + ") REFERENCES " +
             "" + TABLE_POSITION + "(" + POSITION_COLUMN_ID + "))";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_DEPARTMENT);
@@ -138,6 +143,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_STAFF);
         db.execSQL(FTS_TABLE_CREATE);
     }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DEPARTMENT);
@@ -148,16 +154,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         /**Create new tables*/
         onCreate(db);
     }
+
     public DatabaseHelper open() throws SQLException {
         myDbHelper = new DatabaseHelper(context);
         mDb = myDbHelper.getWritableDatabase();
         return this;
     }
+
     public void close() {
         if (myDbHelper != null) {
             myDbHelper.close();
         }
     }
+
     /**
      * Creating department
      */
@@ -168,6 +177,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long dept_id = db.insert(TABLE_DEPARTMENT, null, values);
         return dept_id;
     }
+
     /**
      * Creating status
      */
@@ -178,6 +188,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long status_id = db.insert(TABLE_STATUS, null, values);
         return status_id;
     }
+
     /**
      * Creating Position
      */
@@ -188,6 +199,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long pos_id = db.insert(TABLE_POSITION, null, values);
         return pos_id;
     }
+
     /**
      * Insert Staff
      *
@@ -209,28 +221,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long inserted = database.insert(FTS_VIRTUAL_TABLE, null, values);
         return inserted;
     }
+
     public ArrayList<SearchStaff> data() {
         SQLiteDatabase database = myDbHelper.getReadableDatabase();
         ArrayList<SearchStaff> arrayList = new ArrayList<SearchStaff>();
         String query = "SELECT * FROM " + TABLE_STAFF;
         Cursor cursor = database.rawQuery(query, null);
-        int length=cursor.getCount();
-        Log.e("Count : ",length+" ");
+        int length = cursor.getCount();
+        Log.e("Count : ", length + " ");
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             for (int i = 0; i < cursor.getCount(); i++) {
-                int id=cursor.getInt(cursor.getColumnIndex(STAFF_COLUMN_ID));
+                int id = cursor.getInt(cursor.getColumnIndex(STAFF_COLUMN_ID));
                 String name = cursor.getString(cursor.getColumnIndex(STAFF_COLUMN_NAME));
                 String phone = cursor.getString(cursor.getColumnIndex(STAFF_COLUMN_PHONE_NUMBER));
                 String place = cursor.getString(cursor.getColumnIndex(STAFF_COLUMN_BIRTH_PLACE));
                 String date = cursor.getString(cursor.getColumnIndex(STAFF_COLUMN_DATE_OF_BIRTH));
-                Log.e("Phone number : ",name);
-                arrayList.add(new SearchStaff(id,name, phone,place,date));
+                Log.e("Phone number : ", name);
+                arrayList.add(new SearchStaff(id, name, phone, place, date));
                 cursor.moveToNext();
             }
         }
         return arrayList;
     }
+
     /**
      * Search Staff
      *
@@ -241,13 +255,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor searchByInputText(String inputText) throws SQLException {
         SQLiteDatabase database = this.getReadableDatabase();
         String query = "SELECT docid as _id," +
-                FTS_COLUMN_NAME + " , " +FTS_COLUMN_PHONE + " , " + FTS_BIRTH_PLACE_FIELD + " , " + FTS_BIRTH_DATE_FIELD + " from " + FTS_VIRTUAL_TABLE +
+                FTS_COLUMN_NAME + " , " + FTS_COLUMN_PHONE + " , " + FTS_BIRTH_PLACE_FIELD + " , " + FTS_BIRTH_DATE_FIELD + " from " + FTS_VIRTUAL_TABLE +
                 " where " + SEARCH_STAFF + " MATCH '" + inputText + "';";
         Cursor mCursor = database.rawQuery(query, null);
-        if (mCursor != null) {mCursor.moveToFirst();
+        if (mCursor != null) {
+            mCursor.moveToFirst();
         }
         return mCursor;
     }
+
     /**
      * Creating activity
      */
@@ -258,6 +274,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long act_id = db.insert(TABLE_ACTIVITY, null, values);
         return act_id;
     }
+
     /**
      * Creating staff
      */
@@ -275,20 +292,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long staff_id = db.insert(TABLE_STAFF, null, values);
         return staff_id;
     }
-    /**
-     * Getting a single Department
-     */
-    /*public Department getDepartment(long dept_id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT * FROM " + TABLE_DEPARTMENT + " WHERE " + DEPARTMENT_COLUMN_ID + " = " +
-                dept_id;
-        Cursor c = db.rawQuery(selectQuery, null);
-        if (c != null) c.moveToFirst();
-        Department dept = new Department();
-        dept.setDept_id(c.getInt(c.getColumnIndex(DEPARTMENT_COLUMN_ID)));
-        dept.setDept_name(c.getString(c.getColumnIndex(DEPARTMENT_COLUMN_NAME)));
-        return dept;
-    }*/
+
     /**
      * Getting all the Departments
      * this needs to changed. ArrayList >> List
@@ -310,6 +314,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return departments;
     }
+
     /**
      * Getting staffs by department
      */
@@ -337,48 +342,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return staffs;
     }
-    /*public ArrayList getStaffByDepartment(long dept_id) {
-        ArrayList<Staff> staffs = new ArrayList<Staff>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT * FROM " + TABLE_STAFF + " INNER JOIN " + TABLE_DEPARTMENT + " " +
-                "ON " + TABLE_STAFF + "." + STAFF_COLUMN_DEPT + " = " + TABLE_DEPARTMENT + "" +
-                "." + DEPARTMENT_COLUMN_ID + "WHERE " + TABLE_STAFF + "." + STAFF_COLUMN_DEPT + " = " +
-                dept_id;
 
-        Cursor c = db.rawQuery(selectQuery, null);
-        ArrayList arrayListName = new ArrayList();
-        c.moveToFirst();
-        while(c.isAfterLast() == false){
-            arrayListName.add(c.getString(c.getColumnIndex("staff_id")));
-            arrayListName.add(c.getString(c.getColumnIndex("name")));
-        }
-
-        *//*if (c != null) c.moveToFirst();
-
-        if (c.moveToFirst()) {
-            do {
-                Staff staff = new Staff();
-                staff.setStaff_id(c.getInt(c.getColumnIndex(STAFF_COLUMN_ID)));
-                staff.setName(c.getString(c.getColumnIndex(STAFF_COLUMN_NAME)));
-                staff.setDate_of_birth(c.getString(c.getColumnIndex(STAFF_COLUMN_DATE_OF_BIRTH)));
-                staff.setBirth_place(c.getString(c.getColumnIndex(STAFF_COLUMN_BIRTH_PLACE)));
-                staff.setPhone_number(c.getString(c.getColumnIndex(STAFF_COLUMN_PHONE_NUMBER)));
-                staff.setDept_id(c.getInt(c.getColumnIndex(STAFF_COLUMN_DEPT)));
-                staff.setStatus_id(c.getInt(c.getColumnIndex(STAFF_COLUMN_STATUS)));
-                staff.setActivity_id(c.getInt(c.getColumnIndex(STAFF_COLUMN_ACTIVITY)));
-                staff.setPosition_id(c.getInt(c.getColumnIndex(STAFF_COLUMN_POSITION)));
-
-                staffs.add(staff);
-            } while (c.moveToNext());
-        }
-        return staffs;*//*
-        return arrayListName;
-    }*/
-    /**the tables below will be used later*/
     /**
      * Getting staff by id
      */
-        public Staff getStaffById(long staff_id){
+    public Staff getStaffById(long staff_id) {
         SQLiteDatabase db = this.getReadableDatabase();
         String selectQuery = "SELECT * FROM " + TABLE_STAFF + " WHERE " + STAFF_COLUMN_ID + " =" +
                 " " + staff_id;
@@ -396,6 +364,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         staff.setPosition_id(c.getInt(c.getColumnIndex(STAFF_COLUMN_POSITION)));
         return staff;
     }
+
     /**
      * Getting department by id
      */
@@ -410,6 +379,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         dept.setDept_name(c.getString(c.getColumnIndex(DEPARTMENT_COLUMN_NAME)));
         return dept;
     }
+
     /**
      * Getting status by id
      */
@@ -425,6 +395,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         status.setStatus_name(c.getString(c.getColumnIndex(STATUS_COLUMN_NAME)));
         return status;
     }
+
     /**
      * Getting position by id
      */
@@ -439,6 +410,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         pos.setPosition_name(c.getString(c.getColumnIndex(POSITION_COLUMN_NAME)));
         return pos;
     }
+
     /**
      * Getting activity by id
      */
@@ -453,10 +425,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         act.setActivity_name(c.getString(c.getColumnIndex(ACTIVITY_COLUMN_NAME)));
         return act;
     }
+
     /**
      * Update staff by id
      */
-    public int updateStaff(Staff staff,long id) {
+    public int updateStaff(Staff staff, long id) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(STAFF_COLUMN_NAME, staff.getName());
@@ -468,8 +441,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(STAFF_COLUMN_ACTIVITY, staff.getActivity_id());
         values.put(STAFF_COLUMN_POSITION, staff.getPosition_id());
         // updating row
-        return db.update(TABLE_STAFF, values, STAFF_COLUMN_ID + " = " +id,null);
+        return db.update(TABLE_STAFF, values, STAFF_COLUMN_ID + " = " + id, null);
     }
+
     /**
      * Delete staff by id
      */
@@ -478,6 +452,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(TABLE_STAFF, STAFF_COLUMN_ID + " = ?",
                 new String[]{String.valueOf(staff_id)});
     }
+    /**the tables below can be used later in the future if some unanticipated situation comes*/
+
+    /**
+     * Getting a single Department
+     */
+    /*public Department getDepartment(long dept_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_DEPARTMENT + " WHERE " + DEPARTMENT_COLUMN_ID + " = " +
+                dept_id;
+        Cursor c = db.rawQuery(selectQuery, null);
+        if (c != null) c.moveToFirst();
+        Department dept = new Department();
+        dept.setDept_id(c.getInt(c.getColumnIndex(DEPARTMENT_COLUMN_ID)));
+        dept.setDept_name(c.getString(c.getColumnIndex(DEPARTMENT_COLUMN_NAME)));
+        return dept;
+    }*/
 /*
     *//**
      * Checks if department table exists

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Register</string>
+    <string name="app_name">Human Resource Management</string>
     <string name="action_settings">Settings</string>
     <string name="action_search">Search</string>
     <string name="drawer_open">Open</string>
@@ -64,6 +64,7 @@
         <item>SR. EXECUTIVE</item>
         <item>EXECUTIVE</item>
     </string-array>
-    <string name="title_activity_addstaff">Addstaff</string>
-    <string name="title_activity_staff_detail">StaffDetail</string>
+    <string name="title_activity_addstaff">EDIT STAFF INFORMATION</string>
+    <string name="title_activity_staff_detail">DETAILS OF THE STAFF</string>
+    <string name="title_activity_staff_list">LIST OF THE STAFFS</string>
 </resources>
