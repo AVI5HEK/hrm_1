@@ -27,7 +27,6 @@ public class StaffListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_staff_list);
-
         mDb = new DatabaseHelper(this);
         ArrayList arrayListName = new ArrayList();
         final ArrayList<Integer> arrayListId = new ArrayList<Integer>();
@@ -52,10 +51,23 @@ public class StaffListActivity extends AppCompatActivity {
                         int idToSearch = arrayListId.get(position);
                         Bundle dataBundle = new Bundle();
                         dataBundle.putLong(BUNDLE_ID, idToSearch);
-                        Intent intent = new Intent(getApplicationContext(), com.framgia.hrm.activity
-                                .StaffDetail.class);
+                        Intent intent = new Intent(getApplicationContext(),StaffDetail.class);
                         intent.putExtras(dataBundle);
                         startActivity(intent);
+                        Log.d("idToSearch",idToSearch +" ");
+                    }
+                });
+                //for listviw long click listener
+                mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        int idToSearch=arrayListId.get(position);
+                        Bundle dataBundle = new Bundle();
+                        dataBundle.putLong(BUNDLE_ID, idToSearch);
+                        Intent intent = new Intent(getApplicationContext(),Addstaff.class);
+                        intent.putExtras(dataBundle);
+                        startActivity(intent);
+                        return true;
                     }
                 });
             }
