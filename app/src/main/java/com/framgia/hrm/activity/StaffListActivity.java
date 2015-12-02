@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.framgia.hrm.R;
 import com.framgia.hrm.adapter.StaffListAdapter;
@@ -39,13 +40,11 @@ public class StaffListActivity extends AppCompatActivity {
         if (extras != null) {
             id = extras.getLong(EXTRA_ID);
             if (id > 0) {
-                staffList = mDb.getStaffByDepartment(id);
                 Log.e("stafflist ","id "+id);
                 staffList=mDb.getStaffByPaging(id,position);
                 mStaffListAdapter = new StaffListAdapter(this, (ArrayList) staffList);
                 mListView = (ListView) findViewById(R.id.lv_staffs);
                 mListView.setAdapter(mStaffListAdapter);
-                //for listview click
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -58,7 +57,6 @@ public class StaffListActivity extends AppCompatActivity {
                         Log.d("idToSearch", idToSearch + " ");
                     }
                 });
-                //for listviw long click listener
                 mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -71,8 +69,6 @@ public class StaffListActivity extends AppCompatActivity {
                         return true;
                     }
                 });
-
-
                 mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
                     @Override
                     public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -80,7 +76,7 @@ public class StaffListActivity extends AppCompatActivity {
                         int count = view.getChildCount();
                         if (scrollState == SCROLL_STATE_IDLE || (first + count > mStaffListAdapter.getCount()) ) {
                             mListView.invalidateViews();
-                            position=mStaffListAdapter.getCount()+1;
+                            position=mStaffListAdapter.getCount();
                             ArrayList<Staff>arrayList= mDb.getStaffByPaging(id, position);
                             for(int i=0;i<arrayList.size(); i++) {
                                 staffList.add(arrayList.get(i));
@@ -100,10 +96,17 @@ public class StaffListActivity extends AppCompatActivity {
         }
         mDb.closeDB();
     }
-
     @Override
     protected void onResume() {
+     ArrayList<Staff>staffs= (ArrayList<Staff>) mDb.getStaffByDepartment(id);
+        int size=staffList.size();
+        staffList.clear();
+        for(int i=0;i<size;i++){
+          staffList.add(staffs.get(i));
+        }
+        mListView.setAdapter(null);
+        mListView.setAdapter(mStaffListAdapter);
+        mStaffListAdapter.notifyDataSetChanged();
         super.onResume();
-
     }
 }
