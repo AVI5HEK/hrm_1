@@ -366,6 +366,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * stafflist by pagging
+     * @param dept_id
+     * @param page
+     * @return
+     */
+    public ArrayList<Staff> getStaffByPaging(long dept_id, int page) {
+        ArrayList<Staff> staffs = new ArrayList<Staff>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_STAFF + " where " + STAFF_COLUMN_DEPT + " =" +
+                " " + dept_id + " order by " + STAFF_COLUMN_ID + " limit 1 offset " + page;
+        Cursor c = db.rawQuery(selectQuery, null);
+        if (c != null) c.moveToFirst();
+        if (c.moveToFirst()) {
+            do {
+                Staff staff = new Staff();
+                staff.setStaff_id(c.getInt(c.getColumnIndex(STAFF_COLUMN_ID)));
+                staff.setName(c.getString(c.getColumnIndex(STAFF_COLUMN_NAME)));
+                staff.setDate_of_birth(c.getString(c.getColumnIndex(STAFF_COLUMN_DATE_OF_BIRTH)));
+                staff.setBirth_place(c.getString(c.getColumnIndex(STAFF_COLUMN_BIRTH_PLACE)));
+                staff.setPhone_number(c.getString(c.getColumnIndex(STAFF_COLUMN_PHONE_NUMBER)));
+                staff.setDept_id(c.getInt(c.getColumnIndex(STAFF_COLUMN_DEPT)));
+                staff.setStatus_id(c.getInt(c.getColumnIndex(STAFF_COLUMN_STATUS)));
+                staff.setActivity_id(c.getInt(c.getColumnIndex(STAFF_COLUMN_ACTIVITY)));
+                staff.setPosition_id(c.getInt(c.getColumnIndex(STAFF_COLUMN_POSITION)));
+                staffs.add(staff);
+            } while (c.moveToNext());
+        }
+        return staffs;
+
+
+    }
+
+
+    /**
      * Getting department by id
      */
     public Department getDepartmentById(long dept_id) {
