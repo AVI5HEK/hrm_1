@@ -37,24 +37,24 @@ public class StaffDetail extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         long staff_id = extras.getLong(EXTRA_ID);
         Staff staff = mDatabaseHelper.getStaffById(staff_id);
-        mName.setText("Name: " + staff.getName());
-        mDate_birth.setText("Date of birth: " + staff.getDate_of_birth());
-        mBirth_place.setText("Birth place: " + staff.getBirth_place());
+        mName.setText(staff.getName());
+        mDate_birth.setText(staff.getDate_of_birth());
+        mBirth_place.setText(staff.getBirth_place());
         //mDate_birth.setText(staff.getDate_of_birth());
         //mBirth_place.setText(staff.getBirth_place());
-        mPhone_number.setText("Phone number: " + staff.getPhone_number());
+        mPhone_number.setText(staff.getPhone_number());
         Department dept = new Department();
         dept = mDatabaseHelper.getDepartmentById(staff.getDept_id());
-        mDept.setText("Department: " + dept.getDept_name());
+        mDept.setText(dept.getDept_name());
         Status status = new Status();
         status = mDatabaseHelper.getStatusById(staff.getStatus_id());
-        mStatus.setText("Status: " + status.getStatus_name());
+        mStatus.setText(status.getStatus_name());
         Activity act = new Activity();
         act = mDatabaseHelper.getActivityById(staff.getActivity_id());
-        mActivity.setText("Activity: " + act.getActivity_name());
+        mActivity.setText(act.getActivity_name());
         Position pos = new Position();
         pos = mDatabaseHelper.getPositionById(staff.getPosition_id());
-        mPosition.setText("Position: " + pos.getPosition_name());
+        mPosition.setText(pos.getPosition_name());
         mDatabaseHelper.closeDB();
 
 

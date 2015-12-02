@@ -5,7 +5,7 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="nav_item_home">Home</string>
-    <string name="nav_item_registration">Registration</string>
+    <string name="nav_item_registration">Add new staff</string>
     <string name="nav_item_view">View</string>
     <string name="nav_item_update">Edit</string>
     <string name="title_update">Edit</string>
@@ -17,7 +17,8 @@
     <string name="hint_email">Email</string>
     <string name="hint_dept">Department</string>
     <string name="fragment_registration_linear_1_edit_birth_place_hint_birth_place">Birthplace</string>
-    <string name="fragment_registration_relative_2_edit_calender_id_hint_date">Choose Date </string>
+    <string name="fragment_registration_relative_2_edit_calender_id_hint_date">Choose Date
+        (tap button on the right)</string>
     <string name="fragment_registration_linear_1_edit_phone_hint_phone">Enter Your Contact Number</string>
     <string name="btn_add_usr">Submit</string>
     <string name="err_msg_name">Enter your full name</string>
@@ -30,7 +31,14 @@
     <string name="fragment_home_text_1_text">HOME</string>
     <string name="fragment_home_text_2_text">Edit fragment_home.xml to change the appearance</string>
     <string name="staff_list_title">Staffs</string>
-    <string name="activity_staff_text_staffs_text_size">adkfjdsakjfa</string>
+    <string name="activity_staff_detail_text_label_name">Name:</string>
+    <string name="activity_staff_detail_text_label_dob">Date of birth:</string>
+    <string name="activity_staff_detail_text_label_birthplace">Birthplace:</string>
+    <string name="activity_staff_detail_text_label_phone">Phone number:</string>
+    <string name="activity_staff_detail_text_label_department">Department:</string>
+    <string name="activity_staff_detail_text_label_status">Status</string>
+    <string name="activity_staff_detail_text_label_activity">Activity</string>
+    <string name="activity_staff_detail_text_label_position">Position</string>
     <string-array name="nav_drawer_labels">
         <item>@string/nav_item_home</item>
         <item>@string/nav_item_registration</item>

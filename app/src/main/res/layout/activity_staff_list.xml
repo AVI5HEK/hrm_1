@@ -14,7 +14,6 @@
         android:gravity="center"
         android:text="@string/staff_list_title"
         android:textAllCaps="true"
-
         android:textStyle="bold"
         android:id="@+id/text_staffs"
         android:textSize="@dimen/activity_staff_text_staffs_text_size"/>
@@ -22,5 +21,6 @@
     <ListView
         android:id="@+id/lv_staffs"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:listSelector="@drawable/list_selector"/>
 </LinearLayout>
