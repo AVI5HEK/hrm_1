@@ -10,4 +10,5 @@
     <color name="fragment_registration_relative_2_text_department_spinner_dept_popup_background">#03a9f4</color>
     <color name="fragment_registration_relative_2_text_status_spinner_status_popup_background">#03a9f4</color>
     <color name="fragment_registration_relative_2_text_position_spinner_position_popup_background">#03a9f4</color>
+    <color name="staff_list_text_staff_list_text_color">#000000</color>
 </resources>
