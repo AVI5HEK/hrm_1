@@ -350,6 +350,7 @@ public class Addstaff extends AppCompatActivity {
                    Staff staff = new Staff(mName, mBirthday, mBplace, mPhone, mDept, mStatus, mActivity,
                            mPosition);
                    long staff_id = mDb.createStaff(staff);
+                   mDb.addstaffsearch(staff);
                    mDb.closeDB();
                    Toast.makeText(getApplicationContext(), "New staff added", Toast.LENGTH_SHORT).show();
                    Bundle dataBundle = new Bundle();

@@ -1,8 +1,10 @@
 package com.framgia.hrm.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.framgia.hrm.R;
@@ -18,7 +20,7 @@ public class StaffDetail extends AppCompatActivity {
             mPosition;
     private String EXTRA_ID = "id";
     DatabaseHelper mDatabaseHelper;
-
+    long staff_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +37,9 @@ public class StaffDetail extends AppCompatActivity {
         mActivity = (TextView) findViewById(R.id.text_act);
         mPosition = (TextView) findViewById(R.id.text_pos);
         Bundle extras = getIntent().getExtras();
-        long staff_id = extras.getLong(EXTRA_ID);
+        staff_id = extras.getLong("ID");
+        if (staff_id == 0)
+        Log.e("staff id ", " " + staff_id);
         Staff staff = mDatabaseHelper.getStaffById(staff_id);
         mName.setText("Name: " + staff.getName());
         mDate_birth.setText("Date of birth: " + staff.getDate_of_birth());
@@ -56,16 +60,18 @@ public class StaffDetail extends AppCompatActivity {
         pos = mDatabaseHelper.getPositionById(staff.getPosition_id());
         mPosition.setText("Position: " + pos.getPosition_name());
         mDatabaseHelper.closeDB();
-
-
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
     }
-
+    @Override
+    public void onBackPressed() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            if (intent.hasExtra("STAFFDETAIL")) {
+                Intent i = new Intent(this, MainActivity.class);
+                i.putExtra("STAFFDETAIL", intent.getStringExtra("STAFFDETAIL"));
+                startActivity(i);
+                finish();
+            }
+        }
+        super.onBackPressed();
+    }
 }

@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +30,7 @@ import com.framgia.hrm.model.Status;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchView.OnQueryTextListener {
+public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
     private static String TAG = MainActivity.class.getSimpleName();
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     DatabaseHelper mDatabaseHelper;
     MyAdapter adapter;
     ListView list_department;
+    Cursor cursor;
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +55,22 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        searchView = (SearchView) findViewById(R.id.search);
+        searchView.setOnQueryTextListener(this);
+        searchView.setOnCloseListener(this);
         mDatabaseHelper = new DatabaseHelper(this);
         list_department = (ListView) findViewById(R.id.list_department);
+        Intent intent = getIntent();
+        if (intent != null) {
+            if (intent.hasExtra("STAFFDETAIL")) {
+                try {
+                    searchView.setIconified(false);
+                    displayResults(intent.getStringExtra("STAFFDETAIL"));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         PREF_STATE = getApplicationContext().getSharedPreferences("MyPref",
                 MODE_PRIVATE);
         int pref_State = PREF_STATE.getInt("state", 0);
@@ -165,50 +182,40 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
     private void displayResults(String query) throws SQLException {
-        // mDbHelper.db_value();
-        add_data();
-        Cursor cursor = mDatabaseHelper.searchByInputText((query != null ? query : "@@@@"));
-        if (cursor != null) {
-            String[] from = new String[]{mDatabaseHelper.FTS_COLUMN_NAME, mDatabaseHelper.FTS_COLUMN_PHONE,
-                    mDatabaseHelper.FTS_BIRTH_PLACE_FIELD, mDatabaseHelper.FTS_BIRTH_DATE_FIELD};
-              /*  for (int i=0;i<from.length;i++){
-                    Toast.makeText(getApplicationContext(),"From  "+from[i],Toast.LENGTH_LONG).show();
-                }*/
-            int[] to = new int[]{R.id.search_result_text_view, R.id.result_number, R.id.birth_place, R.id.birth_date};
-            SimpleCursorAdapter cursorAdapter1 = new SimpleCursorAdapter(this, R.layout.result_search_item, cursor, from, to);
-            SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.result_search_item, cursor, from, to, 1);
-            if (cursorAdapter.getCount() > 0)
-                list_department.setAdapter(cursorAdapter);
-            final String staff_id = mDatabaseHelper.FTS_COLUMN_ID;
-            //listview Click listener
-            list_department.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    //   Cursor cursor = (Cursor) myList.getItemAtPosition(position);
-                    //  String selectedName = cursor.getString(cursor.getColumnIndexOrThrow("name"));
-                    Toast.makeText(MainActivity.this, "selectedName :" + staff_id, Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getApplication(), StaffDetail.class);
-                    intent.putExtra("ID", id);
-                    startActivity(intent);
-                     /*   myList.setAdapter(defaultAdapter);
-                        for (int pos = 0; pos < nameList.size(); pos++) {
-                            if (nameList.get(pos).equals(selectedName)) {
-                                position = pos;
-                                break;
-                            }
-                        }
-                        android.os.Handler handler = new android.os.Handler();
-                        final int finalPosition = position;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                myList.setSelection(finalPosition);
-                            }
-                        });
-                        searchView.setQuery("", true);*/
-                }
-            });
+        final String query_intent = query;
+        if (!query_intent.equals("*")) {
+            cursor = mDatabaseHelper.searchByInputText((query != null ? query : "@@@@"));
+            Log.e("final query: ", query_intent);
+            if (cursor != null && cursor.getCount() > 0) {
+                Log.e("cursor ", "c " + cursor.getCount());
+                String[] from = new String[]{mDatabaseHelper.FTS_COLUMN_NAME, mDatabaseHelper.FTS_COLUMN_PHONE,
+                        mDatabaseHelper.FTS_BIRTH_PLACE_FIELD, mDatabaseHelper.FTS_BIRTH_DATE_FIELD, mDatabaseHelper.FTS_COLUMN_DEPARTMENT};
+                int[] to = new int[]{R.id.search_result_text_view, R.id.result_number, R.id.birth_place, R.id.birth_date, R.id.department_name};
+                final SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.result_search_item, cursor, from, to, 1);
+                if (cursorAdapter.getCount() > 0 && cursor.getCount() > 0)
+                    list_department.setAdapter(cursorAdapter);
+                     list_department.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Toast.makeText(MainActivity.this, "selectedName :" + id, Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplication(), StaffDetail.class);
+                        intent.putExtra("ID", id);
+                        intent.putExtra("STAFFDETAIL", query_intent);
+                        startActivity(intent);
+                        searchView.setQuery("", true);
+                    }
+                });
+
+            } else {
+                list_department.setAdapter(adapter);
+                Toast.makeText(getApplicationContext(), "data found not", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), "No data found !!!!!", Toast.LENGTH_LONG).show();
+            list_department.setAdapter(null);
+            list_department.setAdapter(adapter);
         }
     }
+
     @Override
     public boolean onQueryTextSubmit(String query) {
         try {
@@ -258,5 +265,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private void mCreateActivityList() {
         mDatabaseHelper.createActivity(new Activity("ACTIVE"));
         mDatabaseHelper.createActivity(new Activity("INACTIVE"));
+    }
+
+    @Override
+    public boolean onClose() {
+        return false;
     }
 }
