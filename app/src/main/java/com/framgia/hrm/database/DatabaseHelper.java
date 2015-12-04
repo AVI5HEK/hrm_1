@@ -28,17 +28,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * table FTS
      */
-    public static final String FTS_COLUMN_NAME = "fruits";
+    public static final String FTS_COLUMN_NAME = "name";
     public static final String FTS_COLUMN_PHONE = "phone";
     private static final String FTS_VIRTUAL_TABLE = "staff_info";
     public static final String SEARCH_STAFF = "search_item";
     public static final String FTS_BIRTH_PLACE_FIELD = "birth_place";
     public static final String FTS_BIRTH_DATE_FIELD = "birth_date";
     public static final String FTS_COLUMN_ID = "staff_id";
+    public static final String FTS_COLUMN_DEPARTMENT = "department";
     private static final String FTS_TABLE_CREATE =
             "CREATE VIRTUAL TABLE " + FTS_VIRTUAL_TABLE +
                     " USING fts3 (" +
                     FTS_COLUMN_ID + ", " +
+                    FTS_COLUMN_DEPARTMENT+", "+
                     FTS_COLUMN_NAME + ", " +
                     FTS_BIRTH_DATE_FIELD + ", " +
                     FTS_BIRTH_PLACE_FIELD + ", " +
@@ -255,7 +257,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor searchByInputText(String inputText) throws SQLException {
         SQLiteDatabase database = this.getReadableDatabase();
         String query = "SELECT docid as _id," +
-                FTS_COLUMN_NAME + " , " + FTS_COLUMN_PHONE + " , " + FTS_BIRTH_PLACE_FIELD + " , " + FTS_BIRTH_DATE_FIELD + " from " + FTS_VIRTUAL_TABLE +
+                FTS_COLUMN_NAME + " , " + FTS_COLUMN_PHONE + " , " + FTS_BIRTH_PLACE_FIELD + " , " + FTS_BIRTH_DATE_FIELD +" , "+FTS_COLUMN_DEPARTMENT+ " from " + FTS_VIRTUAL_TABLE +
                 " where " + SEARCH_STAFF + " MATCH '" + inputText + "';";
         Cursor mCursor = database.rawQuery(query, null);
         if (mCursor != null) {
@@ -376,7 +378,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         String selectQuery = "SELECT * FROM " + TABLE_STAFF + " where " + STAFF_COLUMN_DEPT + " =" +
-                " " + dept_id + " order by " + STAFF_COLUMN_ID + " limit 1 offset " + page;
+                " " + dept_id + " order by " + STAFF_COLUMN_ID + " limit 3 offset " + page;
         Cursor c = db.rawQuery(selectQuery, null);
         if (c != null) c.moveToFirst();
         if (c.moveToFirst()) {
@@ -395,10 +397,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } while (c.moveToNext());
         }
         return staffs;
-
-
     }
-
+    public long addstaffsearch(Staff staff) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        int id=staff.getDept_id();
+        Department department=this.getDepartmentById(id);
+        String name=department.getDept_name();
+        String searchValue = staff.getName() + " " +
+                staff.getPhone_number()+" "+name;
+        ContentValues values = new ContentValues();
+        values.put(FTS_COLUMN_ID, staff.getStaff_id());
+        values.put(FTS_COLUMN_NAME, staff.getName());
+        values.put(FTS_COLUMN_DEPARTMENT, name);
+        values.put(FTS_COLUMN_PHONE, staff.getPhone_number());
+        values.put(FTS_BIRTH_DATE_FIELD, staff.getDate_of_birth());
+        values.put(FTS_BIRTH_PLACE_FIELD, staff.getBirth_place());
+        values.put(SEARCH_STAFF, searchValue);
+        //Log.e("user data ", "n :" + searchfts.phone);
+        long inserted = database.insert(FTS_VIRTUAL_TABLE, null, values);
+        return inserted;
+    }
+    /**
+     * update FTS table by id
+     */
+    public long updatefts(Staff staff, long id) {
+        int dept_id=staff.getDept_id();
+        Department department=this.getDepartmentById(dept_id);
+        String name=department.getDept_name();
+        String searchValue = staff.getName() + " " +
+                staff.getPhone_number()+" "+name;
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        Log.e("Name ",staff.getName());
+        values.put(FTS_COLUMN_NAME, staff.getName());
+        values.put(FTS_COLUMN_DEPARTMENT, name);
+        values.put(FTS_BIRTH_DATE_FIELD, staff.getDate_of_birth());
+        values.put(FTS_BIRTH_PLACE_FIELD, staff.getBirth_place());
+        values.put(FTS_COLUMN_PHONE, staff.getPhone_number());
+        values.put(SEARCH_STAFF, searchValue);
+        // updating row
+        return db.update(FTS_VIRTUAL_TABLE, values, FTS_COLUMN_ID + " = " + id, null);
+    }
 
     /**
      * Getting department by id

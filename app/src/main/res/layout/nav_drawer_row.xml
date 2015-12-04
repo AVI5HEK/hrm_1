@@ -11,5 +11,8 @@
         android:paddingLeft="@dimen/nav_drawer_row_text_title_padding_left"
         android:paddingTop="@dimen/nav_drawer_row_text_title_padding_top"
         android:textSize="@dimen/nav_drawer_row_text_title_text_size"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:textColor="@drawable/selector"
+        android:background="@drawable/list_selector"/>
 </RelativeLayout>
