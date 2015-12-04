@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     public static SharedPreferences PREF_STATE = null;
     public static SharedPreferences.Editor editor = null;
     int state = 0;
+    int switch_adpter=1;
     private static final String EXTRA_ID = "ID";
     private static final String EXTRA_STAFF_DETAIL = "STAFFDETAIL";
     DatabaseHelper mDatabaseHelper;
@@ -198,21 +199,33 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 cursorAdapter.notifyDataSetChanged();
                 list_department.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Toast.makeText(MainActivity.this, "selectedName :" + id, Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getApplication(), StaffDetailActivity.class);
-                        intent.putExtra(EXTRA_ID, id);
-                        intent.putExtra(EXTRA_STAFF_DETAIL, query_intent);
-                        startActivity(intent);
-                        searchView.setQuery("", true);
+                        if(id!=0 && switch_adpter==1) {
+                            Toast.makeText(MainActivity.this, "selectedName :" + id, Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(getApplication(), StaffDetailActivity.class);
+                            intent.putExtra("ID", id);
+                            intent.putExtra(EXTRA_STAFF_DETAIL, query_intent);
+                            startActivity(intent);
+                            searchView.setQuery("", true);
+                        }else {
+                            int idToSearch = adapter.getItem(position).getDept_id();
+                            Bundle dataBundle = new Bundle();
+                            dataBundle.putLong(EXTRA_ID, idToSearch);
+                            Intent intent = new Intent(getApplicationContext(), com.framgia.hrm.activity
+                                    .StaffListActivity.class);
+                            intent.putExtras(dataBundle);
+                            startActivity(intent);
+                            // Toast.makeText(MainActivity.this, "yo staff :" + id, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 
             } else {
+                Toast.makeText(getApplicationContext(), "no result found", Toast.LENGTH_SHORT).show();
                 list_department.setAdapter(adapter);
-                Toast.makeText(getApplicationContext(), "data found not", Toast.LENGTH_LONG).show();
+              //  Toast.makeText(getApplicationContext(), "data found not", Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(getApplicationContext(), "No data found !!!!!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "No data found !!!!!", Toast.LENGTH_LONG).show();
             list_department.setAdapter(null);
             list_department.setAdapter(adapter);
         }
@@ -233,12 +246,17 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     public boolean onQueryTextChange(String newText) {
         if (!newText.isEmpty()) {
             try {
+                switch_adpter=1;
                 displayResults(newText + "*");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        } else
+        } else {
+            switch_adpter=2;
+            list_department.setAdapter(null);
             list_department.setAdapter(adapter);
+            list_department.setAdapter(adapter);
+        }
         return false;
     }
 
