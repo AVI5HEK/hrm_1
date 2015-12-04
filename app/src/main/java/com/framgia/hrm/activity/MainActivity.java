@@ -1,11 +1,13 @@
 package com.framgia.hrm.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -36,12 +38,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private FragmentDrawer drawerFragment;
     private final static int HOME_FRAGMENT = 0;
     private final static int REGISTRATION_FRAGMENT = 1;
-    private final static int VIEW_FRAGMENT = 2;
-    private final static int UPDATE_FRAGMENT = 3;
+    private final static int ABOUT_FRAGMENT = 2;
+    private final static int EXIT_FRAGMENT = 3;
     public static SharedPreferences PREF_STATE = null;
     public static SharedPreferences.Editor editor = null;
     int state = 0;
-    private static final String BUNDLE_ID = "id";
+    private static final String EXTRA_ID = "ID";
+    private static final String EXTRA_STAFF_DETAIL = "STAFFDETAIL";
     DatabaseHelper mDatabaseHelper;
     MyAdapter adapter;
     ListView list_department;
@@ -62,10 +65,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         list_department = (ListView) findViewById(R.id.list_department);
         Intent intent = getIntent();
         if (intent != null) {
-            if (intent.hasExtra("STAFFDETAIL")) {
+            if (intent.hasExtra(EXTRA_STAFF_DETAIL)) {
                 try {
                     searchView.setIconified(false);
-                    displayResults(intent.getStringExtra("STAFFDETAIL"));
+                    displayResults(intent.getStringExtra(EXTRA_STAFF_DETAIL));
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -103,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int idToSearch = adapter.getItem(position).getDept_id();
                 Bundle dataBundle = new Bundle();
-                dataBundle.putLong(BUNDLE_ID, idToSearch);
+                dataBundle.putLong(EXTRA_ID, idToSearch);
                 Intent intent = new Intent(getApplicationContext(), com.framgia.hrm.activity
                         .StaffListActivity.class);
                 intent.putExtras(dataBundle);
@@ -153,28 +156,25 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 title = getString(R.string.title_home);
                 break;
             case REGISTRATION_FRAGMENT:
-                fragment = new RegistrationFragment();
-                title = getString(R.string.title_registration);
                 Bundle dataBundle = new Bundle();
-                dataBundle.putLong(BUNDLE_ID, 0);
-                Intent intent = new Intent(getApplicationContext(), Addstaff.class);
+                dataBundle.putLong(EXTRA_ID, 0);
+                Intent intent = new Intent(getApplicationContext(), AddstaffActivity.class);
                 intent.putExtras(dataBundle);
                 startActivity(intent);
                 break;
-            case VIEW_FRAGMENT:
-                fragment = new ViewFragment();
-                title = getString(R.string.title_view);
+            case ABOUT_FRAGMENT:
+                Intent intentAbout = new Intent(getApplicationContext(), AboutActivity.class);
+                startActivity(intentAbout);
                 break;
-            case UPDATE_FRAGMENT:
-                fragment = new UpdateFragment();
-                title = getString(R.string.title_update);
+            case EXIT_FRAGMENT:
+                exitDialog();
                 break;
             default:
                 break;
         }
-     /*   if (fragment != null) {
+        /*if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();fragmentTransaction.replace(R.id.frame_container_body, fragment);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();fragmentTransaction.replace(R.id.container_body, fragment);
             fragmentTransaction.commit();
              //set the toolbar title
             getSupportActionBar().setTitle(title);
@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             cursor = mDatabaseHelper.searchByInputText((query != null ? query : "@@@@"));
             Log.e("final query: ", query_intent);
             if (cursor != null && cursor.getCount() > 0) {
+                Log.e("cursor ", "cname "+mDatabaseHelper.FTS_COLUMN_NAME);
                 Log.e("cursor ", "c " + cursor.getCount());
                 String[] from = new String[]{mDatabaseHelper.FTS_COLUMN_NAME, mDatabaseHelper.FTS_COLUMN_PHONE,
                         mDatabaseHelper.FTS_BIRTH_PLACE_FIELD, mDatabaseHelper.FTS_BIRTH_DATE_FIELD, mDatabaseHelper.FTS_COLUMN_DEPARTMENT};
@@ -194,12 +195,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 final SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.result_search_item, cursor, from, to, 1);
                 if (cursorAdapter.getCount() > 0 && cursor.getCount() > 0)
                     list_department.setAdapter(cursorAdapter);
-                     list_department.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                cursorAdapter.notifyDataSetChanged();
+                list_department.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Toast.makeText(MainActivity.this, "selectedName :" + id, Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getApplication(), StaffDetail.class);
-                        intent.putExtra("ID", id);
-                        intent.putExtra("STAFFDETAIL", query_intent);
+                        Intent intent = new Intent(getApplication(), StaffDetailActivity.class);
+                        intent.putExtra(EXTRA_ID, id);
+                        intent.putExtra(EXTRA_STAFF_DETAIL, query_intent);
                         startActivity(intent);
                         searchView.setQuery("", true);
                     }
@@ -238,6 +240,24 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         } else
             list_department.setAdapter(adapter);
         return false;
+    }
+
+    private void exitDialog() {
+        // dialog box
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setTitle(R.string.activity_main_alert_dialog_title)
+                .setMessage(R.string.activity_main_alert_dialog_message)
+                .setPositiveButton(R.string.activity_main_alert_dialog_yes, new DialogInterface
+                        .OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        System.exit(1);
+                    }
+                })
+                .setNegativeButton(R.string.activity_staff_list_alert_dialog_no, null)
+                .show();
     }
 
     private void mCreateDepartmentList() {

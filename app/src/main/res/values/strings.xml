@@ -1,25 +1,27 @@
 <resources>
-    <string name="app_name">Human Resource Management</string>
+    <string name="app_name">Human Resource Management System</string>
     <string name="action_settings">Settings</string>
     <string name="action_search">Search</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="nav_item_home">Home</string>
-    <string name="nav_item_registration">Registration</string>
-    <string name="nav_item_view">View</string>
-    <string name="nav_item_update">Edit</string>
-    <string name="title_update">Edit</string>
-    <string name="title_view">View</string>
-    <string name="title_registration">Registration</string>
+    <string name="nav_item_registration">Add new staff</string>
+    <string name="nav_item_about">About</string>
+    <string name="nav_item_exit">Exit</string>
+    <string name="title_exit">Exit</string>
+    <string name="title_about">About</string>
+    <string name="title_add_new_staff">Add new staff</string>
     <string name="title_home">Home</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fragment_registration_linear_1_edit_name_hint_name">Full Name</string>
     <string name="hint_email">Email</string>
     <string name="hint_dept">Department</string>
     <string name="fragment_registration_linear_1_edit_birth_place_hint_birth_place">Birthplace</string>
-    <string name="fragment_registration_relative_2_edit_calender_id_hint_date">Choose Date </string>
+    <string name="fragment_registration_relative_2_edit_calender_id_hint_date">Choose Date
+        (tap button on the right)</string>
     <string name="fragment_registration_linear_1_edit_phone_hint_phone">Enter Your Contact Number</string>
     <string name="btn_add_usr">Submit</string>
+    <string name="btn_edit_usr">Edit</string>
     <string name="err_msg_name">Enter your full name</string>
     <string name="err_msg_email">Enter valid email address</string>
     <string name="err_msg_password">Enter the password</string>
@@ -30,12 +32,41 @@
     <string name="fragment_home_text_1_text">HOME</string>
     <string name="fragment_home_text_2_text">Edit fragment_home.xml to change the appearance</string>
     <string name="staff_list_title">Staffs</string>
-    <string name="activity_staff_text_staffs_text_size">adkfjdsakjfa</string>
+    <string name="activity_staff_detail_text_label_name">Name:</string>
+    <string name="activity_staff_detail_text_label_dob">Date of birth:</string>
+    <string name="activity_staff_detail_text_label_birthplace">Birthplace:</string>
+    <string name="activity_staff_detail_text_label_phone">Phone number:</string>
+    <string name="activity_staff_detail_text_label_department">Department:</string>
+    <string name="activity_staff_detail_text_label_status">Status:</string>
+    <string name="activity_staff_detail_text_label_activity">Activity:</string>
+    <string name="activity_staff_detail_text_label_position">Position:</string>
+    <string name="activity_staff_list_alert_dialog_message">Do you want to edit this staff?</string>
+    <string name="activity_staff_list_alert_dialog_title">EDIT STAFF INFORMATION</string>
+    <string name="activity_staff_list_alert_dialog_yes">Yes</string>
+    <string name="activity_staff_list_alert_dialog_no">No</string>
+    <string name="activity_main_alert_dialog_message">Want to exit?</string>
+    <string name="activity_main_alert_dialog_title">EXIT</string>
+    <string name="activity_main_alert_dialog_yes">Yes</string>
+    <string name="activity_main_alert_dialog_no">No</string>
+    <string name="activity_staff_list_text_developed_by">Developed By:</string>
+    <string name="activity_staff_list_text_ahsan">Md. Ahsanul Karim</string>
+    <string name="activity_staff_list_text_avishek">Md. Avishek Khan Hridoy</string>
+    <string name="activity_staff_list_text_shawon">Shawon Sharma</string>
+    <string name="activity_staff_list_text_supervised_by">Supervised By:</string>
+    <string name="activity_staff_list_text_supervisor">Nguyen Viet Manh</string>
+    <string name="activity_staff_list_text_copyright">Copyright©2015 by Framgia Vietnam</string>
+    <string name="activity_staff_list_text_version">Version: 1.0</string>
+    <string name="activity_addstaff_validation">You must enter a name at least!</string>
+    <string-array name="activity_staff_list_text_developers">
+        <item>@string/activity_staff_list_text_ahsan</item>
+        <item>@string/activity_staff_list_text_avishek</item>
+        <item>@string/activity_staff_list_text_shawon</item>
+    </string-array>
     <string-array name="nav_drawer_labels">
         <item>@string/nav_item_home</item>
         <item>@string/nav_item_registration</item>
-        <item>@string/nav_item_view</item>
-        <item>@string/nav_item_update</item>
+        <item>@string/nav_item_about</item>
+        <item>@string/nav_item_exit</item>
     </string-array>
     <string name="select">Choose Currently Active or Not</string>
     <string-array name="activity_array">
@@ -67,4 +98,5 @@
     <string name="title_activity_addstaff">EDIT STAFF INFORMATION</string>
     <string name="title_activity_staff_detail">DETAILS OF THE STAFF</string>
     <string name="title_activity_staff_list">LIST OF THE STAFFS</string>
+    <string name="title_activity_about">ABOUT \'HUMAN RESOURCE MANAGEMENT SYSTEM\'</string>
 </resources>
