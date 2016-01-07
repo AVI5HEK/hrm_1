@@ -11,10 +11,12 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.framgia.hrm.R;
 import com.framgia.hrm.adapter.StaffListAdapter;
 import com.framgia.hrm.database.DatabaseHelper;
+import com.framgia.hrm.model.Department;
 import com.framgia.hrm.model.Staff;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import java.util.List;
 public class StaffListActivity extends AppCompatActivity {
     private DatabaseHelper mDb;
     private ListView mListView;
+    private TextView mTextView;
     /**
      * extras & bundles
      */
@@ -38,6 +41,7 @@ public class StaffListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_staff_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mTextView = (TextView) findViewById(R.id.text_activity_staff_list);
 
         mDb = new DatabaseHelper(this);
         Bundle extras = getIntent().getExtras();
@@ -46,10 +50,16 @@ public class StaffListActivity extends AppCompatActivity {
             if (id > 0) {
                 Log.e("stafflist ", "id " + id);
                 staffList = mDb.getStaffByPaging(id, position);
-                /**commented section was written by Avishek Khan*/
+                if(!staffList.isEmpty()) {
+                    /**commented section was written by Avishek Khan*/
                 /*staffList = mDb.getStaffByDepartment(id);
                 Log.e("stafflist ", "id " + id);
                 staffList = mDb.getStaffByPaging(id, position);*/
+                    Department dept = mDb.getDepartmentById(staffList.get(0).getDept_id());
+                    mTextView.setText("SHOWING STAFFS UNDER '" + dept.getDept_name() + "' DEPARTMENT");
+                }else{
+                    mTextView.setText("NO STAFF LISTED YET!");
+                }
                 mStaffListAdapter = new StaffListAdapter(this, (ArrayList) staffList);
                 mListView = (ListView) findViewById(R.id.lv_staffs);
                 mListView.setAdapter(mStaffListAdapter);

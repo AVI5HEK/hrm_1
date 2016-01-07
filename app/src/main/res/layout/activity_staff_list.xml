@@ -15,6 +15,14 @@
                                        android:background="?attr/colorPrimary"
                                        app:popupTheme="@style/MyMaterialTheme.PopupOverlay" />
     </android.support.design.widget.AppBarLayout>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/activity_staff_text_staffs_text_size"
+        android:id="@+id/text_activity_staff_list"
+        android:gravity="center"
+        android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"/>
     <ListView
         android:id="@+id/lv_staffs"
         android:layout_width="fill_parent"
